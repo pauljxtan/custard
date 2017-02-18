@@ -1,0 +1,32 @@
+
+<button id="ajax-request">Make a request</button>
+
+<span id="ajax-return">[Response shown here]</span>
+
+<script src="static/js/jquery/jquery-3.1.1.min.js"></script>
+
+<script>
+  $(document).ready(function() {
+    $('#ajax-request').click(function() {
+      var data = {
+        'action': 'test'
+      };
+      data = $(this).serialize() + '&' + $.param(data);
+
+      $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: 'test2.php',
+        data: data,
+        success: function(data) {
+          $('#ajax-return').html(
+            data['action'] + ' ' + data['usami'] + ' ' + data['json']
+          );
+
+          alert('Success')
+        }
+      });
+      return false;
+    });
+  });
+</script>

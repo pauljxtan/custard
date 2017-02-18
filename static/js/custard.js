@@ -1,3 +1,4 @@
+
 function loadSummaryTable() {
     html =  '<tbody>';
     html += '  <tr>';
