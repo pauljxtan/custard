@@ -1,55 +1,65 @@
-
-function loadSummaryTable() {
-    html =  '<tbody>';
-    html += '  <tr>';
-    html += '    <th>Total</th>';
-    html += '    <td id="summary-total"></td>';
-    html += '  </tr>';
-    html += '  <tr>';
-    html += '    <th>Due today</th>';
-    html += '    <td id="summary-due-today"></td>';
-    html += '  </tr>';
-    html += '</tbody>';
-    document.getElementById('summary').innerHTML = html;
+function getSummary() {
+  doTaskRequest('getSummary', loadSummaryTable);
 }
 
-function loadTasksTable() {
-
-    // TODO: get tasks from PHP
-    var tasks = [
-        ['Do thing', 'Do something', 'Sunday, Jan 1, 2017'],
-        ['Do thing', 'Do something', 'Sunday, Jan 1, 2017'],
-        ['Do thing', 'Do something', 'Sunday, Jan 1, 2017']
-    ];
-
-    var html = '';
-    html += '<thead>';
-    html += '  <tr>';
-    html += '    <th>Title</th>';
-    html += '    <th>Description</th>';
-    html += '    <th>Due</th>';
-    html += '  </tr>';
-    html += '</thead>';
-    html += '<tbody>';
-    for (var i = 0; i < tasks.length; i++) {
-        html += '  <tr>';
-        html += '    <td>' + tasks[i][0] + '</td>';
-        html += '    <td>' + tasks[i][1] + '</td>';
-        html += '    <td>' + tasks[i][2] + '</td>';
-        html += '  </tr>';
-    }
-    html += '</tbody>';
-    document.getElementById('tasks').innerHTML = html;
+function getAllTasks() {
+  doTaskRequest('getAllTasks', loadTasksTable);
 }
 
-function ajaxTest()
-{
-    $ajax({
-        url: 'custard.php',
-        type: 'GET',
-        data: {},
-        success: function (response) {
-            window.alert(response);
-        }
+function doTaskRequest(action, loadFunc) {
+  $(document).ready(function() {
+    data = $(this).serialize() + '&' + $.param({'action': action});
+    alert(data);
+
+    $.ajax({
+      type: 'POST',
+      dataType: 'json',
+      url: 'php/tasks.php',
+      data: data,
+      success: function(data, status) {
+        alert(data);
+        alert(status);
+        loadFunc(data);
+      }
     });
+  });
+}
+
+function loadSummaryTable(data) {
+  var total = data['total'];
+  var dueToday = data['dueToday'];
+  var html = '';
+  html =  '<tbody>';
+  html += '  <tr>';
+  html += '    <th>Total</th>';
+  html += '    <td id="summary-total">' + total + '</td>';
+  html += '  </tr>';
+  html += '  <tr>';
+  html += '    <th>Due today</th>';
+  html += '    <td id="summary-due-today">' + dueToday + '</td>';
+  html += '  </tr>';
+  html += '</tbody>';
+  document.getElementById('summary').innerHTML = html;
+}
+
+function loadTasksTable(data) {
+  var allTasks = data;
+  var html = '';
+  html += '<thead>';
+  html += '  <tr>';
+  html += '    <th>Title</th>';
+  html += '    <th>Description</th>';
+  html += '    <th>Due</th>';
+  html += '  </tr>';
+  html += '</thead>';
+  html += '<tbody>';
+  for (var i = 0; i < allTasks.length; i++) {
+    html += '  <tr>';
+    html += '    <td>' + allTasks[i]['title'] + '</td>';
+    html += '    <td>' + allTasks[i]['description'] + '</td>';
+    html += '    <td>' + allTasks[i]['dueDate'] + '</td>';
+    html += '  </tr>';
+  }
+  html += '</tbody>';
+  document.getElementById('tasks').innerHTML = html;
 }

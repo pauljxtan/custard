@@ -12,14 +12,14 @@ class MySQL
     $this->dbHandle->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
   }
 
-  // Executes unprepared statement, use only if no user input
+  // WARNING: Executes unprepared statement, use only if no user input
   public function exec($sql)
   {
     $numRowsAffected = $this->dbHandle->exec($sql);
     return $numRowsAffected;
   }
 
-  // Executes unprepared statement, use only if no user input
+  // WARNING: Executes unprepared statement, use only if no user input
   public function query($sql) {
     $statement = $this->dbHandle->query($sql);
     $rows = $statement->fetchAll();

@@ -18,7 +18,6 @@ class Task
     return new Task($row['title'], $row['description'], $row['dueDate']);
   }
 
-
 }
 
 ?>
