@@ -1,6 +1,5 @@
 <?php
 
-include 'tasks.php';
 include 'MySQL.php';
 
 ini_set('display_errors', 1);
@@ -24,8 +23,4 @@ foreach ($rows as $row) {
   echo $row['title'] . ' ' . $row['description'] . ' ' . $row['dueDate'] . '<br>';
 }
 
-$totalTasks = getTotalTasks($db);
-echo $totalTasks;
-
 ?>
-

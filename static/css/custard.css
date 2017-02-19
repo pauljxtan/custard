@@ -1,52 +1,41 @@
 body {
-    font-family: Inconsolata;
+  font-family: serif, Inconsolata;
 }
-div#content {
-    width: 600px;
-    min-height: 600px;
-}
-div#left {
-    /*width: 300px;*/
-    width: 0;
-    float: left;
-}
-div#right {
-    /*margin-left: 300px;*/
-    margin-left: 0;
-    width: 100%;
+#content {
+  width: 600px;
 }
 table {
-    width: 100%;
-    text-align: left;
-    border-collapse: collapse;;
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;;
 }
 table th, td, input, textarea {
-    padding: 5px;
+  padding: 5px;
 }
-table#task-form th {
-    background: #7F96FF;
-    color: #DBFCFF;
+#task-form th {
+  background: #7F96FF;
+  color: #DBFCFF;
 }
-table#task-form td {
-    color: #7F96FF;
+#task-form td {
+  color: #7F96FF;
 }
-table#task-form input, textarea {
-    width: 300px;
+#task-form input, textarea {
+  width: 300px;
 }
-textarea#description {
-    height: 100px;
+#description {
+  height: 100px;
 }
 button {
-    background: #A6CFD5;
-    color: #DBFCFF;
-    width: 100%;
-    font-weight: bold;
-    padding: 5px;
+  background: #A6CFD5;
+  color: #DBFCFF;
+  width: 100%;
+  font-weight: bold;
+  padding: 5px;
 }
-table#tasks th {
-    background: #E56399;
-    color: #DBFCFF;
+#tasks th {
+  background: #E56399;
+  color: #DBFCFF;
 }
-table#tasks td {
-    color: #E56399;
+#tasks td {
+  color: #E56399;
 }

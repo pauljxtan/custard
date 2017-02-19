@@ -9,16 +9,12 @@ function getAllTasks() {
 function doTaskRequest(action, loadFunc) {
   $(document).ready(function() {
     data = $(this).serialize() + '&' + $.param({'action': action});
-    alert(data);
-
     $.ajax({
       type: 'POST',
       dataType: 'json',
       url: 'php/tasks.php',
       data: data,
       success: function(data, status) {
-        alert(data);
-        alert(status);
         loadFunc(data);
       }
     });

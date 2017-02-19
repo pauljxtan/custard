@@ -1,4 +1,4 @@
-# custard: 
+# custard
 
-A web application for simple to-do list, as a PHP/JavaScript/AJAX learning project.
+A simple web application implementing a to-do list, as a PHP/JavaScript/AJAX learning project.
 
