@@ -4,38 +4,51 @@ body {
 #content {
   width: 600px;
 }
-table {
+.container {
   width: 100%;
-  text-align: left;
-  border-collapse: collapse;;
-}
-table th, td, input, textarea {
   padding: 5px;
 }
-#task-form th {
-  background: #7F96FF;
+.table {
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+}
+.table th {
   color: #DBFCFF;
 }
-#task-form td {
+.table th, td, input, textarea {
+  padding: 5px;
+}
+.table.table-summary th {
+  background: #320E3B;
+}
+.table.table-form th {
+  background: #7F96FF;
+}
+.table.table-form td {
   color: #7F96FF;
 }
-#task-form input, textarea {
+.table.table-form input, textarea {
   width: 300px;
 }
-#description {
+.table.table-form textarea {
   height: 100px;
 }
-button {
+.table.table-form .input.input-submit {
   background: #A6CFD5;
-  color: #DBFCFF;
   width: 100%;
   font-weight: bold;
   padding: 5px;
 }
-#tasks th {
-  background: #E56399;
-  color: #DBFCFF;
+.table.table-form .input.input-submit {
+  background: #A6CFD5;
+  width: 100%;
+  font-weight: bold;
+  padding: 5px;
 }
-#tasks td {
+.table.table-tasks th {
+  background: #E56399;
+}
+.table.table-tasks td {
   color: #E56399;
 }

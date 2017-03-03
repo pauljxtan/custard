@@ -26,6 +26,10 @@ class MySQL
     return $rows;
   }
 
+  public function deleteAllRows($tableName) {
+    $this->exec("TRUNCATE $tableName;");
+  }
+
   public function insertRows($tableName, $nCols, $inputRows)  {
     $sql = "INSERT INTO $tableName VALUES (" . str_repeat('?, ', $nCols - 1) . "?);";
     $statement = $this->dbHandle->prepare($sql);
@@ -46,6 +50,5 @@ class MySQL
     $sql = "SELECT COUNT(*) AS count FROM $tableName;";
     $rows = $this->query($sql);
     return $rows[0]['count'];
-
   }
 }

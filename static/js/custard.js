@@ -1,31 +1,58 @@
 function getSummary() {
-  doTaskRequest('getSummary', loadSummaryTable);
+  doTaskRequest({'action': 'getSummary'}, loadSummaryTable);
 }
 
 function getAllTasks() {
-  doTaskRequest('getAllTasks', loadTasksTable);
+  doTaskRequest({'action': 'getAllTasks'}, loadTasksTable);
 }
 
-function doTaskRequest(action, loadFunc) {
+function addTask() {
+  doTaskRequest
+  (
+    {
+      'action': 'addTask',
+      'title': $('#input-title').val(),
+      'description': $('#textarea-description').val(),
+      'dueDate': $('#input-dueDate').val()
+    },
+    alertAddedTask()
+  );
+}
+
+function clearAllTasks() {
+  doTaskRequest({'action': 'clearAllTasks'}, alertClearedAllTasks())
+}
+
+function doTaskRequest(params, successFunc) {
   $(document).ready(function() {
-    data = $(this).serialize() + '&' + $.param({'action': action});
+    data = $(this).serialize() + '&' + $.param(params);
     $.ajax({
       type: 'POST',
       dataType: 'json',
       url: 'php/tasks.php',
       data: data,
-      success: function(data, status) {
-        loadFunc(data);
-      }
+      success: successFunc
     });
   });
+}
+
+function alertAddedTask(data) {
+  alert("Added task: " + data['addedTitle'] + ", " + data['addedDescription'] + ", " + data['addedDueDate']);
+  getSummary();
+  getAllTasks();
+}
+
+function alertClearedAllTasks(data) {
+  alert("Cleared all tasks");
+  getSummary();
+  getAllTasks();
 }
 
 function loadSummaryTable(data) {
   var total = data['total'];
   var dueToday = data['dueToday'];
   var html = '';
-  html =  '<tbody>';
+  html +=  '<tbody>';
   html += '  <tr>';
   html += '    <th>Total</th>';
   html += '    <td id="summary-total">' + total + '</td>';
@@ -35,7 +62,7 @@ function loadSummaryTable(data) {
   html += '    <td id="summary-due-today">' + dueToday + '</td>';
   html += '  </tr>';
   html += '</tbody>';
-  document.getElementById('summary').innerHTML = html;
+  document.getElementById('table-summary').innerHTML = html;
 }
 
 function loadTasksTable(data) {
@@ -57,5 +84,5 @@ function loadTasksTable(data) {
     html += '  </tr>';
   }
   html += '</tbody>';
-  document.getElementById('tasks').innerHTML = html;
+  document.getElementById('table-tasks').innerHTML = html;
 }

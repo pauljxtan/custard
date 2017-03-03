@@ -9,9 +9,43 @@
 
 <body>
 
-<div id="content">
-  <table id="summary"></table>
-  <table id="tasks"></table>
+<div id="content" class="container">
+  <div class="container">
+    <table id="table-summary" class="table table-summary"></table>
+  </div>
+  <div class="container">
+    <form id="add-task-form">
+      <table id="table-addtask" class="table table-form">
+        <tbody>
+        <tr>
+          <th><label for="input-title">Title</label></th>
+          <td><input id="input-title" type="text" /></td>
+        </tr>
+        <tr>
+          <th><label for="textarea-description">Description</label></th>
+          <td><textarea id="textarea-description"></textarea></td>
+        </tr>
+        <tr>
+          <th><label for="input-dueDate">Due date</label></th>
+          <td><input id="input-dueDate" type="text" /></td>
+        </tr>
+        <tr>
+          <td colspan="2"><input class="input input-submit" onclick="addTask()" value="Add task" /></td>
+        </tr>
+        <tr>
+          <td colspan="2"><input class="input input-clear-all" onclick="clearAllTasks()" value="Clear all tasks" /></td>
+        </tr>
+        </tbody>
+      </table>
+    </form>
+  </div>
+  <div class="container">
+    <div id="added-task-display"></div>
+  </div>
+
+  <div class="container">
+    <table id="table-tasks" class="table table-tasks"></table>
+  </div>
 </div>
 
 <script src="static/js/jquery/jquery-3.1.1.min.js"></script>

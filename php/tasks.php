@@ -7,7 +7,7 @@ error_reporting(E_ALL);
 include 'MySQL.php';
 
 // TODO: configure this somewhere more centralized
-$db = new MySQL('localhost', 'custard', 'mysqladmin', 'dolGbma7');
+$db = new MySQL('localhost', 'custard', 'mysqladmin', 'minadsqlmy');
 
 $action = $_POST['action'];
 switch ($action) {
@@ -16,6 +16,15 @@ switch ($action) {
     break;
   case 'getAllTasks':
     getAllTasks($db);
+    break;
+  case 'addTask':
+    $title = $_POST['title'];
+    $description = $_POST['description'];
+    $dueDate = $_POST['dueDate'];
+    addTask($db, $title, $description, $dueDate);
+    break;
+  case 'clearAllTasks':
+    clearAllTasks($db);
     break;
 }
 
@@ -40,6 +49,26 @@ function getAllTasks($db)
     array_push($allTasks, $task);
   }
   echo json_encode($allTasks);
+}
+
+function addTask($db, $title, $description, $dueDate)
+{
+  $row = array($title, $description, $dueDate);
+  $rows = array($row);
+  $db->insertRows('tasks', 3, $rows);
+  echo json_encode(array(
+    'addedTitle' => $title,
+    'addedDescription' => $description,
+    'addedDueDate' => $dueDate
+  ));
+}
+
+function clearAllTasks($db)
+{
+  $db->deleteAllRows('tasks');
+  echo json_encode(array(
+    'result' => 'success'
+  ));
 }
 
 ?>
