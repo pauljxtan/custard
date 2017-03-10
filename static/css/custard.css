@@ -36,12 +36,14 @@ body {
 }
 .table.table-form .input.input-submit {
   background: #A6CFD5;
+  color: #320E3B;
   width: 100%;
   font-weight: bold;
   padding: 5px;
 }
-.table.table-form .input.input-submit {
+.table.table-form .input.input-clear-all {
   background: #A6CFD5;
+  color: #320E3B;
   width: 100%;
   font-weight: bold;
   padding: 5px;
