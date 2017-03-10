@@ -15,12 +15,12 @@ function addTask() {
       'description': $('#textarea-description').val(),
       'dueDate': $('#input-dueDate').val()
     },
-    alertAddedTask()
+    alertAddedTask
   );
 }
 
 function clearAllTasks() {
-  doTaskRequest({'action': 'clearAllTasks'}, alertClearedAllTasks())
+  doTaskRequest({'action': 'clearAllTasks'}, alertClearedAllTasks)
 }
 
 function doTaskRequest(params, successFunc) {
@@ -36,19 +36,19 @@ function doTaskRequest(params, successFunc) {
   });
 }
 
-function alertAddedTask(data) {
+function alertAddedTask(data, textStatus, jqXHR) {
   alert("Added task: " + data['addedTitle'] + ", " + data['addedDescription'] + ", " + data['addedDueDate']);
   getSummary();
   getAllTasks();
 }
 
-function alertClearedAllTasks(data) {
+function alertClearedAllTasks(data, textStatus, jqXHR) {
   alert("Cleared all tasks");
   getSummary();
   getAllTasks();
 }
 
-function loadSummaryTable(data) {
+function loadSummaryTable(data, textStatus, jqXHR) {
   var total = data['total'];
   var dueToday = data['dueToday'];
   var html = '';
@@ -65,7 +65,7 @@ function loadSummaryTable(data) {
   document.getElementById('table-summary').innerHTML = html;
 }
 
-function loadTasksTable(data) {
+function loadTasksTable(data, textStatus, jqXHR) {
   var allTasks = data;
   var html = '';
   html += '<thead>';
