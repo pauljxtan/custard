@@ -8,7 +8,7 @@ include 'mysql.php';
 
 $db = new MySQL('localhost', 'custard', 'mysqladmin', 'minadsqlmy');
 
-$action = $_POST['action'];
+$action = urldecode($_POST['action']);
 switch ($action)
 {
   case 'getSummary':
@@ -18,7 +18,8 @@ switch ($action)
     getAllTasks($db);
     break;
   case 'addTask':
-    addTask($db, $_POST['title'], $_POST['description'], $_POST['dueDate']);
+    // TODO: Validate parameters
+    addTask($db, urldecode($_POST['title']), urldecode($_POST['description']), urldecode($_POST['dueDate']));
     break;
   case 'clearAllTasks':
     clearAllTasks($db);
