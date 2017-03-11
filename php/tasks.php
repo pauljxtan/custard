@@ -26,12 +26,26 @@ switch ($action)
     break;
 }
 
-function getSummary($db) {
+function getSummary($db)
+{
   $totalTasks = $db->getRowCount('tasks');
+  $overdue = sizeof(getTasksOverdue($db));
+  $dueToday = sizeof(getTasksDueToday($db));
   echo json_encode(array(
     'total' => $totalTasks,
-    'dueToday' => 'TEST123'
+    'overdue' => $overdue,
+    'dueToday' => $dueToday
   ));
+}
+
+function getTasksOverdue($db)
+{
+  return $db->query("SELECT * FROM tasks WHERE dueDate < DATE(NOW());");
+}
+
+function getTasksDueToday($db)
+{
+  return $db->query("SELECT * FROM tasks WHERE dueDate = DATE(NOW());");
 }
 
 function getAllTasks($db)
