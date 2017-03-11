@@ -30,16 +30,14 @@
           <th><label for="input-dueDate">Due date</label></th>
           <td><input id="input-dueDate" type="text" /></td>
         </tr>
-        <tr>
-          <td colspan="2"><button class="button button-submit" onclick="addTask()">Add task</button></td>
-        </tr>
-        <tr>
-          <td colspan="2"><button class="button button-clear-all" onclick="clearAllTasks()">Clear all tasks</button></td>
-        </tr>
         </tbody>
       </table>
     </form>
+
+    <button id="button-submit" class="button button-submit" onclick="addTask()">Add task</button>
+    <button class="button button-clear-all" onclick="clearAllTasks()">Clear all tasks</button>
   </div>
+
   <div class="container">
     <div id="added-task-display"></div>
   </div>
@@ -55,6 +53,13 @@
 <script>
   getSummary();
   getAllTasks();
+
+  // Trigger add task button click when hitting enter in any input field
+  $("#table-addtask input, textarea").keyup(function(event) {
+    if (event.keyCode == 13) {
+      $("#button-submit").click();
+    }
+  });
 </script>
 
 </body>
