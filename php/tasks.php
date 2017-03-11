@@ -6,11 +6,11 @@ error_reporting(E_ALL);
 
 include 'mysql.php';
 
-// TODO: configure this somewhere more centralized
 $db = new MySQL('localhost', 'custard', 'mysqladmin', 'minadsqlmy');
 
 $action = $_POST['action'];
-switch ($action) {
+switch ($action)
+{
   case 'getSummary':
     getSummary($db);
     break;
@@ -18,10 +18,7 @@ switch ($action) {
     getAllTasks($db);
     break;
   case 'addTask':
-    $title = $_POST['title'];
-    $description = $_POST['description'];
-    $dueDate = $_POST['dueDate'];
-    addTask($db, $title, $description, $dueDate);
+    addTask($db, $_POST['title'], $_POST['description'], $_POST['dueDate']);
     break;
   case 'clearAllTasks':
     clearAllTasks($db);
