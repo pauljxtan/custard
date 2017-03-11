@@ -16,7 +16,7 @@ body {
 .table th {
   color: #DBFCFF;
 }
-.table th, td, input, textarea {
+.table th, td, input, textarea, button {
   padding: 5px;
 }
 .table.table-summary th {
@@ -34,14 +34,14 @@ body {
 .table.table-form textarea {
   height: 100px;
 }
-.table.table-form .input.input-submit {
+.table.table-form .button.button-submit {
   background: #A6CFD5;
   color: #320E3B;
   width: 100%;
   font-weight: bold;
   padding: 5px;
 }
-.table.table-form .input.input-clear-all {
+.table.table-form .button.button-clear-all {
   background: #A6CFD5;
   color: #320E3B;
   width: 100%;

@@ -13,6 +13,7 @@
   <div class="container">
     <table id="table-summary" class="table table-summary"></table>
   </div>
+
   <div class="container">
     <form id="add-task-form">
       <table id="table-addtask" class="table table-form">
@@ -30,10 +31,10 @@
           <td><input id="input-dueDate" type="text" /></td>
         </tr>
         <tr>
-          <td colspan="2"><input class="input input-submit" onclick="addTask()" value="Add task" /></td>
+          <td colspan="2"><button class="button button-submit" onclick="addTask()">Add task</button></td>
         </tr>
         <tr>
-          <td colspan="2"><input class="input input-clear-all" onclick="clearAllTasks()" value="Clear all tasks" /></td>
+          <td colspan="2"><button class="button button-clear-all" onclick="clearAllTasks()">Clear all tasks</button></td>
         </tr>
         </tbody>
       </table>
