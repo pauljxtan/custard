@@ -1,9 +1,9 @@
 function getSummary() {
-  doTaskRequest({'action': 'getSummary'}, loadSummaryTable);
+  doTaskRequest({'action': 'getSummary'}, gotSummary);
 }
 
 function getAllTasks() {
-  doTaskRequest({'action': 'getAllTasks'}, loadTasksTable);
+  doTaskRequest({'action': 'getAllTasks'}, gotAllTasks);
 }
 
 function addTask() {
@@ -11,16 +11,16 @@ function addTask() {
   (
     {
       'action': 'addTask',
-      'title': $('#input-title').val(),
-      'description': $('#textarea-description').val(),
-      'dueDate': $('#input-dueDate').val()
+      'title': encodeURIComponent($('#input-title').val()),
+      'description': encodeURIComponent($('#textarea-description').val()),
+      'dueDate': encodeURIComponent($('#input-dueDate').val())
     },
-    alertAddedTask
+    addedTask
   );
 }
 
 function clearAllTasks() {
-  doTaskRequest({'action': 'clearAllTasks'}, alertClearedAllTasks)
+  doTaskRequest({'action': 'clearAllTasks'}, clearedAllTasks)
 }
 
 function doTaskRequest(params, successFunc) {
@@ -36,19 +36,27 @@ function doTaskRequest(params, successFunc) {
   });
 }
 
-function alertAddedTask(data, textStatus, jqXHR) {
+function gotSummary(data, textStatus, jqXHR) {
+  loadSummaryTable(data);
+}
+
+function gotAllTasks(data, textStatus, jqXHR) {
+  loadTasksTable(data);
+}
+
+function addedTask(data, textStatus, jqXHR) {
   alert("Added task: " + data['addedTitle'] + ", " + data['addedDescription'] + ", " + data['addedDueDate']);
   getSummary();
   getAllTasks();
 }
 
-function alertClearedAllTasks(data, textStatus, jqXHR) {
+function clearedAllTasks(data, textStatus, jqXHR) {
   alert("Cleared all tasks");
   getSummary();
   getAllTasks();
 }
 
-function loadSummaryTable(data, textStatus, jqXHR) {
+function loadSummaryTable(data) {
   var total = data['total'];
   var dueToday = data['dueToday'];
   var html = '';
@@ -65,7 +73,7 @@ function loadSummaryTable(data, textStatus, jqXHR) {
   document.getElementById('table-summary').innerHTML = html;
 }
 
-function loadTasksTable(data, textStatus, jqXHR) {
+function loadTasksTable(data) {
   var allTasks = data;
   var html = '';
   html += '<thead>';
