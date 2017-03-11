@@ -57,17 +57,19 @@ function clearedAllTasks(data, textStatus, jqXHR) {
 }
 
 function loadSummaryTable(data) {
-  var total = data['total'];
-  var dueToday = data['dueToday'];
   var html = '';
   html +=  '<tbody>';
   html += '  <tr>';
   html += '    <th>Total</th>';
-  html += '    <td id="summary-total">' + total + '</td>';
+  html += '    <td id="summary-total">' + data['total'] + '</td>';
+  html += '  </tr>';
+  html += '  <tr>';
+  html += '    <th>Overdue</th>';
+  html += '    <td id="summary-overdue">' + data['overdue'] + '</td>';
   html += '  </tr>';
   html += '  <tr>';
   html += '    <th>Due today</th>';
-  html += '    <td id="summary-due-today">' + dueToday + '</td>';
+  html += '    <td id="summary-due-today">' + data['dueToday'] + '</td>';
   html += '  </tr>';
   html += '</tbody>';
   document.getElementById('table-summary').innerHTML = html;
