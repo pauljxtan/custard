@@ -4,7 +4,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-include 'MySQL.php';
+include 'mysql.php';
 
 // TODO: configure this somewhere more centralized
 $db = new MySQL('localhost', 'custard', 'mysqladmin', 'minadsqlmy');
