@@ -45,13 +45,13 @@ function gotAllTasks(data, textStatus, jqXHR) {
 }
 
 function addedTask(data, textStatus, jqXHR) {
-  alert("Added task: " + data['addedTitle'] + ", " + data['addedDescription'] + ", " + data['addedDueDate']);
+  console.log("Added task: " + data['addedTitle'] + ", " + data['addedDescription'] + ", " + data['addedDueDate']);
   getSummary();
   getAllTasks();
 }
 
 function clearedAllTasks(data, textStatus, jqXHR) {
-  alert("Cleared all tasks");
+  console.log("Cleared all tasks");
   getSummary();
   getAllTasks();
 }
