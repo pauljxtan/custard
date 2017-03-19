@@ -30,8 +30,8 @@ class MySQL
     $this->exec("TRUNCATE $tableName;");
   }
 
-  public function insertRows($tableName, $nCols, $inputRows)  {
-    $sql = "INSERT INTO $tableName VALUES (" . str_repeat('?, ', $nCols - 1) . "?);";
+  public function insertRows($tableName, $fields, $inputRows)  {
+    $sql = "INSERT INTO $tableName (".implode(", ", $fields).") VALUES (".str_repeat('?, ', sizeof($fields) - 1)."?);";
     $statement = $this->dbHandle->prepare($sql);
 
     foreach ($inputRows as $inputRow)

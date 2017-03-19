@@ -19,6 +19,17 @@ function addTask() {
   );
 }
 
+function archiveTask(taskId) {
+  doTaskRequest
+  (
+    {
+      'action': 'archiveTask',
+      'taskId': taskId
+    },
+    archivedTask
+  );
+}
+
 function clearAllTasks() {
   doTaskRequest({'action': 'clearAllTasks'}, clearedAllTasks)
 }
@@ -46,6 +57,12 @@ function gotAllTasks(data, textStatus, jqXHR) {
 
 function addedTask(data, textStatus, jqXHR) {
   console.log("Added task: " + data['addedTitle'] + ", " + data['addedDescription'] + ", " + data['addedDueDate']);
+  getSummary();
+  getAllTasks();
+}
+
+function archivedTask(data, textStatus, jqXHR) {
+  console.log("Archived task: " + data['archivedTitle'] + ", " + data['archivedDescription'] + ", " + data['archivedDueDate']);
   getSummary();
   getAllTasks();
 }
@@ -83,6 +100,7 @@ function loadTasksTable(data) {
   html += '    <th>Title</th>';
   html += '    <th>Description</th>';
   html += '    <th>Due</th>';
+  html += '    <th></th>';
   html += '  </tr>';
   html += '</thead>';
   html += '<tbody>';
@@ -91,6 +109,7 @@ function loadTasksTable(data) {
     html += '    <td>' + allTasks[i]['title'] + '</td>';
     html += '    <td>' + allTasks[i]['description'] + '</td>';
     html += '    <td>' + allTasks[i]['dueDate'] + '</td>';
+    html += '    <td><button id="done-' + allTasks[i]['id'] + '">Done</button></td>';
     html += '  </tr>';
   }
   html += '</tbody>';

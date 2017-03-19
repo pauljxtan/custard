@@ -21,6 +21,9 @@ switch ($action)
     // TODO: Validate parameters
     addTask($db, urldecode($_POST['title']), urldecode($_POST['description']), urldecode($_POST['dueDate']));
     break;
+  case 'archiveTask':
+    archiveTask($db, urldecode($_POST['taskId']));
+    break;
   case 'clearAllTasks':
     clearAllTasks($db);
     break;
@@ -65,14 +68,20 @@ function getAllTasks($db)
 
 function addTask($db, $title, $description, $dueDate)
 {
+  $fields = array("title", "description", "dueDate");
   $row = array($title, $description, $dueDate);
   $rows = array($row);
-  $db->insertRows('tasks', 3, $rows);
+  $db->insertRows('tasks', $fields, $rows);
   echo json_encode(array(
     'addedTitle' => $title,
     'addedDescription' => $description,
     'addedDueDate' => $dueDate
   ));
+}
+
+function archiveTask($db, $taskId)
+{
+  // TODO
 }
 
 function clearAllTasks($db)
