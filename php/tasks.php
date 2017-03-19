@@ -51,6 +51,11 @@ function getTasksDueToday($db)
   return $db->query("SELECT * FROM tasks WHERE dueDate = DATE(NOW());");
 }
 
+function getTasksCompleted($db)
+{
+  // TODO
+}
+
 function getAllTasks($db)
 {
   $rows = $db->getAllRows('tasks');
@@ -69,8 +74,8 @@ function getAllTasks($db)
 
 function addTask($db, $title, $description, $dueDate)
 {
-  $fields = array("title", "description", "dueDate");
-  $row = array($title, $description, $dueDate);
+  $fields = array('title', 'description', 'dueDate', 'completed');
+  $row = array($title, $description, $dueDate, 0);
   $rows = array($row);
   $db->insertRows('tasks', $fields, $rows);
   echo json_encode(array(
@@ -80,7 +85,12 @@ function addTask($db, $title, $description, $dueDate)
   ));
 }
 
-function archiveTask($db, $taskId)
+function addExampleTasks($db)
+{
+  // TODO
+}
+
+function markTaskAsCompleted($db, $taskId)
 {
   // TODO
 }
