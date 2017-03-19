@@ -57,6 +57,7 @@ function getAllTasks($db)
   $allTasks = array();
   foreach ($rows as $row) {
     $task = array(
+      'id' => $row['id'],
       'title' => $row['title'],
       'description' => $row['description'],
       'dueDate' => $row['dueDate']

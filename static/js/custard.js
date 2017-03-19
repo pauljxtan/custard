@@ -48,11 +48,15 @@ function doTaskRequest(params, successFunc) {
 }
 
 function gotSummary(data, textStatus, jqXHR) {
+  console.log("Got summary");
   loadSummaryTable(data);
+  console.log("Loaded summary table");
 }
 
 function gotAllTasks(data, textStatus, jqXHR) {
+  console.log("Got all tasks");
   loadTasksTable(data);
+  console.log("Loaded tasks table");
 }
 
 function addedTask(data, textStatus, jqXHR) {
@@ -109,7 +113,7 @@ function loadTasksTable(data) {
     html += '    <td>' + allTasks[i]['title'] + '</td>';
     html += '    <td>' + allTasks[i]['description'] + '</td>';
     html += '    <td>' + allTasks[i]['dueDate'] + '</td>';
-    html += '    <td><button id="done-' + allTasks[i]['id'] + '">Done</button></td>';
+    html += '    <td><button onclick="archiveTask(' + allTasks[i]['id'] + ')">Done</button></td>';
     html += '  </tr>';
   }
   html += '</tbody>';

@@ -3,8 +3,8 @@
 A simple web application implementing a to-do list, as a PHP/JavaScript/AJAX learning project.
 
 ## To-do
+* Mark task as done (move to archive - separate table, or use "archived" column?)
 * More thorough processing of requests and responses
-* Mark task as done (move to archive)
 * Edit task
 * Validate input
 * Statistics
