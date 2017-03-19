@@ -1,11 +1,27 @@
 body {
   font-family: serif, Inconsolata;
 }
+button {
+  border: none;
+  background: #A6CFD5;
+  color: #320E3B;
+  /*width: 100%;*/
+  font-weight: bold;
+  padding: 5px;
+}
 #content {
   width: 600px;
 }
 #ui-datepicker-div {
-  background: #ffffff;
+  background: #7F96FF;
+  color: #DBFCFF;
+  font-weight: bold;
+}
+#ui-datepicker-div a {
+  text-align: center;
+}
+.ui-datepicker-title {
+  font-size: large;
 }
 .container {
   width: 100%;
@@ -38,24 +54,10 @@ body {
   color: #7F96FF;
 }
 .table.table-form input, textarea {
-  width: 300px;
+  width: 97%;
 }
 .table.table-form textarea {
   height: 100px;
-}
-.button.button-submit {
-  background: #A6CFD5;
-  color: #320E3B;
-  width: 100%;
-  font-weight: bold;
-  padding: 5px;
-}
-.button.button-clear-all {
-  background: #A6CFD5;
-  color: #320E3B;
-  width: 100%;
-  font-weight: bold;
-  padding: 5px;
 }
 .table.table-tasks th {
   background: #E56399;
