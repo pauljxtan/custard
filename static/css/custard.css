@@ -5,7 +5,6 @@ button {
   border: none;
   background: #A6CFD5;
   color: #320E3B;
-  /*width: 100%;*/
   font-weight: bold;
   padding: 5px;
 }
@@ -64,4 +63,7 @@ button {
 }
 .table.table-tasks td {
   color: #E56399;
+}
+.button.button-submit {
+  width: 100%;
 }

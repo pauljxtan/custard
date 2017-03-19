@@ -1,11 +1,11 @@
 function getSummary()
 {
-  doTaskRequest({'action': 'getSummary'}, gotSummary);
+  doTaskRequest({'action': 'getSummary'}, gotSummary, requestFailed);
 }
 
 function getAllTasks()
 {
-  doTaskRequest({'action': 'getAllTasks'}, gotAllTasks);
+  doTaskRequest({'action': 'getAllTasks'}, gotAllTasks, requestFailed);
 }
 
 function addTask()
@@ -18,19 +18,31 @@ function addTask()
       'description': encodeURIComponent($('#textarea-description').val()),
       'dueDate': encodeURIComponent($('#input-dueDate').val())
     },
-    addedTask
+    addedTask,
+    requestFailed
   );
 }
 
-function archiveTask(taskId)
+function clearAllTasks()
+{
+  doTaskRequest({'action': 'clearAllTasks'}, clearedAllTasks, requestFailed)
+}
+
+function addSampleTasks()
+{
+  doTaskRequest({'action': 'addSampleTasks'}, addedSampleTasks, requestFailed)
+}
+
+function completeTask(taskId)
 {
   doTaskRequest
   (
     {
-      'action': 'archiveTask',
+      'action': 'completeTask',
       'taskId': taskId
     },
-    archivedTask
+    completedTask,
+    requestFailed
   );
 }
 
@@ -42,16 +54,12 @@ function deleteTask(taskId)
       'action': 'deleteTask',
       'taskId': taskId
     },
-    deletedTask
+    deletedTask,
+    requestFailed
   );
 }
 
-function clearAllTasks()
-{
-  doTaskRequest({'action': 'clearAllTasks'}, clearedAllTasks)
-}
-
-function doTaskRequest(params, successFunc)
+function doTaskRequest(params, successFunc, errorFunc)
 {
   $(document).ready(function() {
     data = $(this).serialize() + '&' + $.param(params);
@@ -60,9 +68,17 @@ function doTaskRequest(params, successFunc)
       dataType: 'json',
       url: 'php/tasks.php',
       data: data,
-      success: successFunc
+      success: successFunc,
+      error: errorFunc
     });
   });
+}
+
+function requestFailed(jqXHR, textStatus, errorThrown)
+{
+  console.log("Request failed: " + textStatus + " (" + errorThrown  + ")");
+  getSummary();
+  getAllTasks();
 }
 
 function gotSummary(data, textStatus, jqXHR)
@@ -86,9 +102,23 @@ function addedTask(data, textStatus, jqXHR)
   getAllTasks();
 }
 
-function archivedTask(data, textStatus, jqXHR)
+function clearedAllTasks(data, textStatus, jqXHR)
 {
-  console.log("Archived task: " + data['archivedTitle'] + ", " + data['archivedDescription'] + ", " + data['archivedDueDate']);
+  console.log("Cleared all tasks");
+  getSummary();
+  getAllTasks();
+}
+
+function addedSampleTasks(data, textStatus, jqXHR)
+{
+  console.log("Added sample tasks");
+  getSummary();
+  getAllTasks();
+}
+
+function completedTask(data, textStatus, jqXHR)
+{
+  console.log("Completed task: " + data['completedTitle'] + ", " + data['completedDescription'] + ", " + data['completedDueDate']);
   getSummary();
   getAllTasks();
 }
@@ -96,13 +126,6 @@ function archivedTask(data, textStatus, jqXHR)
 function deletedTask(data, textStatus, jqXHR)
 {
   console.log("Deleted task: " + data['deletedTitle'] + ", " + data['deletedDescription'] + ", " + data['deletedDueDate']);
-  getSummary();
-  getAllTasks();
-}
-
-function clearedAllTasks(data, textStatus, jqXHR)
-{
-  console.log("Cleared all tasks");
   getSummary();
   getAllTasks();
 }
@@ -146,7 +169,7 @@ function loadTasksTable(data)
     html += '    <td>' + allTasks[i]['title'] + '</td>';
     html += '    <td>' + allTasks[i]['description'] + '</td>';
     html += '    <td>' + allTasks[i]['dueDate'] + '</td>';
-    html += '    <td><button onclick="archiveTask(' + allTasks[i]['id'] + ')">Complete</button></td>';
+    html += '    <td><button onclick="completeTask(' + allTasks[i]['id'] + ')">Complete</button></td>';
     html += '    <td><button onclick="deleteTask(' + allTasks[i]['id'] + ')">Cancel</button></td>';
     html += '  </tr>';
   }
