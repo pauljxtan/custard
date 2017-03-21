@@ -33,6 +33,9 @@ switch ($action)
   case 'completeTask':
     completeTask($db, urldecode($_POST['taskId']));
     break;
+  case 'deleteTask':
+    deleteTask($db, urldecode($_POST['taskId']));
+    break;
 }
 
 function getSummary($db)
@@ -118,6 +121,7 @@ function addTask($db, $title, $description, $dueDate, $returnAddedTask = true, $
 function clearAllTasks($db)
 {
   $db->deleteAllRows('tasks');
+  // TODO: Return something more meaningful...
   echo json_encode(array(
     'result' => 'success'
   ));
@@ -146,7 +150,10 @@ function completeTask($db, $taskId)
 
 function deleteTask($db, $taskId)
 {
-  // TODO
+  $db->exec("DELETE FROM tasks WHERE id = ".$taskId.";");
+  echo json_encode(array(
+    'result' => 'success'
+  ));
 }
 
 ?>

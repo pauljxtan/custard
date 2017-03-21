@@ -3,7 +3,7 @@
 A simple web application implementing a to-do list, as a PHP/JavaScript/AJAX learning project.
 
 ## To-do
-* Collapsible table for viewing completed tasks
+* Display message on page following various actions ("added task", etc.)
 * Edit task
 * More detail (e.g. category)
 * Validate input

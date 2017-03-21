@@ -147,7 +147,7 @@ function loadSummaryTable(data)
   var html = '';
   html +=  '<tbody>';
   html += '  <tr>';
-  html += '    <th>Total</th>';
+  html += '    <th>Tasks pending</th>';
   html += '    <td id="summary-total">' + data['total'] + '</td>';
   html += '  </tr>';
   html += '  <tr>';
