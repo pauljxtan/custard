@@ -19,6 +19,11 @@ button {
 #ui-datepicker-div a {
   text-align: center;
 }
+#accordion-completed .ui-accordion-header {
+  border: solid;
+  border-width: 1px;
+  color: #E56399;
+}
 .ui-datepicker-title {
   font-size: large;
 }
@@ -58,10 +63,16 @@ button {
 .table.table-form textarea {
   height: 100px;
 }
-.table.table-tasks th {
+.table.table-pending th {
   background: #E56399;
 }
-.table.table-tasks td {
+.table.table-pending td {
+  color: #E56399;
+}
+.table.table-completed th {
+  background: #E56399;
+}
+.table.table-completed td {
   color: #E56399;
 }
 .button.button-submit {

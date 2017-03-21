@@ -14,8 +14,11 @@ switch ($action)
   case 'getSummary':
     getSummary($db);
     break;
-  case 'getAllTasks':
-    getAllTasks($db);
+  case 'getCompletedTasks':
+    getCompletedTasks($db);
+    break;
+  case 'getPendingTasks':
+    getPendingTasks($db);
     break;
   case 'addTask':
     // TODO: Validate parameters
@@ -34,7 +37,7 @@ switch ($action)
 
 function getSummary($db)
 {
-  $totalTasks = $db->getRowCount('tasks');
+  $totalTasks = sizeof(getTasksPending($db));
   $overdue = sizeof(getTasksOverdue($db));
   $dueToday = sizeof(getTasksDueToday($db));
   echo json_encode(array(
@@ -44,25 +47,30 @@ function getSummary($db)
   ));
 }
 
+function getTasksCompleted($db)
+{
+  return $db->query("SELECT * FROM tasks WHERE completed = true;");
+}
+
+function getTasksPending($db)
+{
+  return $db->query("SELECT * FROM tasks WHERE completed = false;");
+}
+
 function getTasksOverdue($db)
 {
-  return $db->query("SELECT * FROM tasks WHERE dueDate < DATE(NOW());");
+  return $db->query("SELECT * FROM tasks WHERE completed = false AND dueDate < DATE(NOW());");
 }
 
 function getTasksDueToday($db)
 {
-  return $db->query("SELECT * FROM tasks WHERE dueDate = DATE(NOW());");
+  return $db->query("SELECT * FROM tasks WHERE completed = false AND dueDate = DATE(NOW());");
 }
 
-function getTasksCompleted($db)
+function getCompletedTasks($db)
 {
-  // TODO
-}
-
-function getAllTasks($db)
-{
-  $rows = $db->getAllRows('tasks');
-  $allTasks = array();
+  $rows = getTasksCompleted($db);
+  $completedTasks = array();
   foreach ($rows as $row) {
     $task = array(
       'id' => $row['id'],
@@ -70,15 +78,31 @@ function getAllTasks($db)
       'description' => $row['description'],
       'dueDate' => $row['dueDate']
     );
-    array_push($allTasks, $task);
+    array_push($completedTasks, $task);
   }
-  echo json_encode($allTasks);
+  echo json_encode($completedTasks);
 }
 
-function addTask($db, $title, $description, $dueDate, $returnAddedTask = true)
+function getPendingTasks($db)
+{
+  $rows = getTasksPending($db);
+  $pendingTasks = array();
+  foreach ($rows as $row) {
+    $task = array(
+      'id' => $row['id'],
+      'title' => $row['title'],
+      'description' => $row['description'],
+      'dueDate' => $row['dueDate']
+    );
+    array_push($pendingTasks, $task);
+  }
+  echo json_encode($pendingTasks);
+}
+
+function addTask($db, $title, $description, $dueDate, $returnAddedTask = true, $completed = 0)
 {
   $fields = array('title', 'description', 'dueDate', 'completed');
-  $row = array($title, $description, $dueDate, 0);
+  $row = array($title, $description, $dueDate, $completed);
   $rows = array($row);
   $db->insertRows('tasks', $fields, $rows);
   if ($returnAddedTask)
@@ -101,9 +125,12 @@ function clearAllTasks($db)
 
 function addSampleTasks($db)
 {
-  addTask($db, "New Year's Party 2018", "Party time!", "2018-01-01", false);
-  addTask($db, "New Year's Party 2019", "Party time again!", "2019-01-01", false);
-  addTask($db, "New Year's Party 2020", "Yep... party time!", "2020-01-01", false);
+  addTask($db, "New Year's Party 2015", "We had this!", "2015-01-01", false, 1);
+  addTask($db, "New Year's Party 2016", "We forgot to have this...", "2016-01-01", false, 0);
+  addTask($db, "New Year's Party 2017", "We had this!", "2017-01-01", false, 1);
+  addTask($db, "New Year's Party 2018", "Party time!", "2018-01-01", false, 0);
+  addTask($db, "New Year's Party 2019", "Party time again!", "2019-01-01", false, 0);
+  addTask($db, "New Year's Party 2020", "Yep... party time!", "2020-01-01", false, 0);
   echo json_encode(array(
     'result' => 'success'
   ));
@@ -111,7 +138,10 @@ function addSampleTasks($db)
 
 function completeTask($db, $taskId)
 {
-  // TODO
+  $db->exec("UPDATE tasks SET completed = true WHERE id = ".$taskId.";");
+  echo json_encode(array(
+    'result' => 'success'
+  ));
 }
 
 function deleteTask($db, $taskId)

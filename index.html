@@ -52,7 +52,16 @@
   </div>
 
   <div class="container">
-    <table id="table-tasks" class="table table-tasks"></table>
+    <table id="table-pending" class="table table-pending"></table>
+  </div>
+
+  <div class="container">
+    <div id="accordion-completed">
+      <h3 id="accordion-completed-header">Show completed tasks</h3>
+      <div>
+        <table id="table-completed" class="table table-completed"></table>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -61,8 +70,7 @@
 <script src="static/js/custard.js"></script>
 
 <script>
-  getSummary();
-  getAllTasks();
+  reloadAllTables();
 
   // Trigger add task button click when hitting enter in any input field
   $("#table-addtask input, textarea").keyup(function(event) {
@@ -72,9 +80,17 @@
   });
 
   // Datepicker widget for due date
-  $(function () {
+  $(function() {
     $("#input-dueDate").datepicker({
       dateFormat: 'yy-mm-dd'
+    });
+  });
+
+  $(function() {
+    $("#accordion-completed").accordion({
+      collapsible: true,
+      active: false,
+      heightStyle: 'content'
     });
   });
 </script>
