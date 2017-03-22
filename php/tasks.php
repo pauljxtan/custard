@@ -44,6 +44,7 @@ function getSummary($db)
   $overdue = sizeof(getTasksOverdue($db));
   $dueToday = sizeof(getTasksDueToday($db));
   echo json_encode(array(
+    'result' => "success",
     'total' => $totalTasks,
     'overdue' => $overdue,
     'dueToday' => $dueToday
@@ -111,6 +112,7 @@ function addTask($db, $title, $description, $dueDate, $returnAddedTask = true, $
   if ($returnAddedTask)
   {
     echo json_encode(array(
+      'result' => "success",
       'addedTitle' => $title,
       'addedDescription' => $description,
       'addedDueDate' => $dueDate
@@ -120,10 +122,11 @@ function addTask($db, $title, $description, $dueDate, $returnAddedTask = true, $
 
 function clearAllTasks($db)
 {
-  $db->deleteAllRows('tasks');
+  $rowsDeleted = $db->deleteAllRows('tasks');
   // TODO: Return something more meaningful...
   echo json_encode(array(
-    'result' => 'success'
+    'result' => "success",
+    'rowsDeleted' => $rowsDeleted
   ));
 }
 
@@ -136,23 +139,33 @@ function addSampleTasks($db)
   addTask($db, "New Year's Party 2019", "Party time again!", "2019-01-01", false, 0);
   addTask($db, "New Year's Party 2020", "Yep... party time!", "2020-01-01", false, 0);
   echo json_encode(array(
-    'result' => 'success'
+    'result' => "success"
   ));
 }
 
 function completeTask($db, $taskId)
 {
+  $row = $db->query("SELECT * FROM tasks WHERE id = ".$taskId.";")[0];
   $db->exec("UPDATE tasks SET completed = true WHERE id = ".$taskId.";");
   echo json_encode(array(
-    'result' => 'success'
+    'result' => "success",
+    'completedTaskId' => $taskId,
+    'completedTitle' => $row['title'],
+    'completedDescription' => $row['description'],
+    'completedDueDate' => $row['dueDate']
   ));
 }
 
 function deleteTask($db, $taskId)
 {
+  $row = $db->query("SELECT * FROM tasks WHERE id = ".$taskId.";")[0];
   $db->exec("DELETE FROM tasks WHERE id = ".$taskId.";");
   echo json_encode(array(
-    'result' => 'success'
+    'result' => "success",
+    'deletedTaskId' => $taskId,
+    'deletedTitle' => $row['title'],
+    'deletedDescription' => $row['description'],
+    'deletedDueDate' => $row['dueDate']
   ));
 }
 

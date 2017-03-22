@@ -91,7 +91,7 @@ function doTaskRequest(params, successFunc, errorFunc)
 
 function requestFailed(jqXHR, textStatus, errorThrown)
 {
-  message = "Request failed: " + textStatus + " (" + errorThrown  + ")";
+  message = "<b>Request failed:</b> " + textStatus + " (" + errorThrown  + ")";
   console.log(message);
   loadMessageSpan(message, MessageLevel.ERROR);
   reloadAllTables();
@@ -117,7 +117,7 @@ function gotPendingTasks(data, textStatus, jqXHR)
 
 function addedTask(data, textStatus, jqXHR)
 {
-  message = "Added task: " + data['addedTitle'] + " (" + data['addedDescription'].substring(0, 10) + "...) [" + data['addedDueDate'] + "]";
+  message = "<b>Added task:</b> " + getFormattedTaskDisplay(data['addedTitle'], data['addedDescription'], data['addedDueDate']);
   console.log(message);
   loadMessageSpan(message, MessageLevel.SUCCESS);
   reloadAllTables();
@@ -125,7 +125,7 @@ function addedTask(data, textStatus, jqXHR)
 
 function clearedAllTasks(data, textStatus, jqXHR)
 {
-  message = "Cleared all tasks";
+  message = "<b>Cleared all tasks</b>";
   console.log(message);
   loadMessageSpan(message, MessageLevel.WARNING);
   reloadAllTables();
@@ -133,7 +133,7 @@ function clearedAllTasks(data, textStatus, jqXHR)
 
 function addedSampleTasks(data, textStatus, jqXHR)
 {
-  message = "Added sample tasks";
+  message = "<b>Added sample tasks</b>";
   console.log(message);
   loadMessageSpan(message, MessageLevel.INFO);
   reloadAllTables();
@@ -141,7 +141,7 @@ function addedSampleTasks(data, textStatus, jqXHR)
 
 function completedTask(data, textStatus, jqXHR)
 {
-  message = "Completed task: " + data['completedTitle'] + ", " + data['completedDescription'] + ", " + data['completedDueDate'];
+  message = "<b>Completed task:</b> " + getFormattedTaskDisplay(data['completedTitle'], data['completedDescription'], data['completedDueDate']);
   console.log(message);
   loadMessageSpan(message, MessageLevel.SUCCESS);
   reloadAllTables();
@@ -149,7 +149,7 @@ function completedTask(data, textStatus, jqXHR)
 
 function deletedTask(data, textStatus, jqXHR)
 {
-  message = "Deleted task: " + data['deletedTitle'] + ", " + data['deletedDescription'] + ", " + data['deletedDueDate'];
+  message = "<b>Deleted task:</b> " + getFormattedTaskDisplay(data['deletedTitle'], data['deletedDescription'], data['deletedDueDate']);
   console.log(message);
   loadMessageSpan(message, MessageLevel.WARNING);
   reloadAllTables();
@@ -194,7 +194,7 @@ function loadSummaryTable(data)
   document.getElementById('table-summary').innerHTML = html;
 }
 
-// TODO: Lots of repeated code to refactor here...
+// TODO: Some refactoring to do here?
 
 function loadPendingTasksTable(data)
 {
@@ -248,7 +248,17 @@ function loadCompletedTasksTable(data)
   document.getElementById('table-completed').innerHTML = html;
 }
 
-MessageLevel = {
+/* Helpers */
+
+function getFormattedTaskDisplay(title, description, dueDate)
+{
+  return title + " (" + description.substring(0, 10) + "...) [" + dueDate + "]";
+}
+
+/* Constants */
+
+MessageLevel =
+{
   SUCCESS: 0,
   INFO: 1,
   WARNING: 2,
