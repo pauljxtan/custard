@@ -1,3 +1,5 @@
+/* AJAX calls */
+
 function reloadAllTables() {
   getSummary();
   getPendingTasks();
@@ -85,61 +87,91 @@ function doTaskRequest(params, successFunc, errorFunc)
   });
 }
 
+/* Callbacks */
+
 function requestFailed(jqXHR, textStatus, errorThrown)
 {
-  console.log("Request failed: " + textStatus + " (" + errorThrown  + ")");
+  message = "Request failed: " + textStatus + " (" + errorThrown  + ")";
+  console.log(message);
+  loadMessageSpan(message, MessageLevel.ERROR);
   reloadAllTables();
 }
 
 function gotSummary(data, textStatus, jqXHR)
 {
-  console.log("Got summary");
   loadSummaryTable(data);
   console.log("Loaded summary table");
 }
 
 function gotCompletedTasks(data, textStatus, jqXHR)
 {
-  console.log("Got completed tasks");
   loadCompletedTasksTable(data);
   console.log("Loaded completed tasks table");
 }
 
 function gotPendingTasks(data, textStatus, jqXHR)
 {
-  console.log("Got pending tasks");
   loadPendingTasksTable(data);
   console.log("Loaded pending tasks table");
 }
 
 function addedTask(data, textStatus, jqXHR)
 {
-  console.log("Added task: " + data['addedTitle'] + ", " + data['addedDescription'] + ", " + data['addedDueDate']);
+  message = "Added task: " + data['addedTitle'] + " (" + data['addedDescription'].substring(0, 10) + "...) [" + data['addedDueDate'] + "]";
+  console.log(message);
+  loadMessageSpan(message, MessageLevel.SUCCESS);
   reloadAllTables();
 }
 
 function clearedAllTasks(data, textStatus, jqXHR)
 {
-  console.log("Cleared all tasks");
+  message = "Cleared all tasks";
+  console.log(message);
+  loadMessageSpan(message, MessageLevel.WARNING);
   reloadAllTables();
 }
 
 function addedSampleTasks(data, textStatus, jqXHR)
 {
-  console.log("Added sample tasks");
+  message = "Added sample tasks";
+  console.log(message);
+  loadMessageSpan(message, MessageLevel.INFO);
   reloadAllTables();
 }
 
 function completedTask(data, textStatus, jqXHR)
 {
-  console.log("Completed task: " + data['completedTitle'] + ", " + data['completedDescription'] + ", " + data['completedDueDate']);
+  message = "Completed task: " + data['completedTitle'] + ", " + data['completedDescription'] + ", " + data['completedDueDate'];
+  console.log(message);
+  loadMessageSpan(message, MessageLevel.SUCCESS);
   reloadAllTables();
 }
 
 function deletedTask(data, textStatus, jqXHR)
 {
-  console.log("Deleted task: " + data['deletedTitle'] + ", " + data['deletedDescription'] + ", " + data['deletedDueDate']);
+  message = "Deleted task: " + data['deletedTitle'] + ", " + data['deletedDescription'] + ", " + data['deletedDueDate'];
+  console.log(message);
+  loadMessageSpan(message, MessageLevel.WARNING);
   reloadAllTables();
+}
+
+/* Loading functions */
+
+function loadMessageSpan(message, messageLevel)
+{
+  var cls = "message message-info";
+  switch (messageLevel) {
+    case MessageLevel.SUCCESS:
+      cls = "message message-success";
+      break;
+    case MessageLevel.WARNING:
+      cls = "message message-warning";
+      break;
+    case MessageLevel.ERROR:
+      cls = "message message-error";
+      break;
+  }
+  $("#span-message").attr('class', cls).html(message);
 }
 
 function loadSummaryTable(data)
@@ -215,3 +247,10 @@ function loadCompletedTasksTable(data)
   html += '</tbody>';
   document.getElementById('table-completed').innerHTML = html;
 }
+
+MessageLevel = {
+  SUCCESS: 0,
+  INFO: 1,
+  WARNING: 2,
+  ERROR: 3
+};
