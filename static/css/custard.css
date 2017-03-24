@@ -97,5 +97,18 @@ button {
 .message.message-error {
   background: #c9302c;
 }
-
-
+.button {
+  color: #ffffff;
+}
+.button.button-success {
+  background: #449d44;
+}
+.button.button-info {
+  background: #0275d8;
+}
+.button.button-warning {
+  background: #ec971f;
+}
+.button.button-error {
+  background: #c9302c;
+}

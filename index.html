@@ -8,6 +8,8 @@
   <link rel="stylesheet" href="static/css/custard.css" />
   <link rel="icon" href="static/img/favicon.ico" />
   <title>Custard</title>
+  <script>
+  </script>
 </head>
 
 <body>
@@ -44,12 +46,12 @@
   </div>
 
   <div class="container">
-    <span><button id="button-submit" class="button button-submit" onclick="addTask()">Add task</button></span>
+    <span><button id="button-submit" class="button button-submit button-success" onclick="addTask()">Add task</button></span>
   </div>
 
   <div class="container">
-    <span><button class="button button-clear-all" onclick="clearAllTasks()">Clear all tasks</button></span>
-    <span><button class="button button-add-sample-tasks" onclick="addSampleTasks()">Add sample tasks</button></span>
+    <span><button class="button button-clear-all button-error" onclick="clearAllTasks()">Clear all tasks</button></span>
+    <span><button class="button button-add-sample-tasks button-info" onclick="addSampleTasks()">Add sample tasks</button></span>
   </div>
 
   <div class="container">
@@ -68,6 +70,9 @@
       </div>
     </div>
   </div>
+
+  <div id="container-dialogs"></div>
+
 </div>
 
 <script src="static/js/jquery/jquery-3.1.1.min.js"></script>
@@ -75,27 +80,29 @@
 <script src="static/js/custard.js"></script>
 
 <script>
-  reloadAllTables();
+  $(document).ready(function() {
+    reloadEverything();
 
-  // Trigger add task button click when hitting enter in any input field
-  $("#table-addtask input, textarea").keyup(function(event) {
-    if (event.keyCode == 13) {
-      $("#button-submit").click();
-    }
-  });
-
-  // Datepicker widget for due date
-  $(function() {
-    $("#input-dueDate").datepicker({
+    // Testing stuff
+    $("#input-dueDate-2").datepicker({
       dateFormat: 'yy-mm-dd'
     });
-  });
 
-  $(function() {
-    $("#accordion-completed").accordion({
-      collapsible: true,
-      active: false,
-      heightStyle: 'content'
+    $("#dialog-edit-task-2").dialog({
+      width: 640,
+      autoOpen: false,
+      modal: true,
+      buttons: [
+        {
+          text: "Close",
+          click: function() {
+            $(this).dialog("close");
+          }
+        }
+      ]
+    });
+    $("#button-edit-task-2").click(function () {
+      $("#dialog-edit-task-2").dialog("open");
     });
   });
 </script>

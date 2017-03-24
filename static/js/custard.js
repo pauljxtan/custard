@@ -1,10 +1,26 @@
-/* AJAX calls */
+/* Main functions */
 
-function reloadAllTables() {
+function reloadEverything()
+{
+  reloadAllTables();
+  reloadAllWidgets();
+}
+
+function reloadAllTables()
+{
   getSummary();
   getPendingTasks();
   getCompletedTasks();
 }
+
+function reloadAllWidgets()
+{
+  loadDueDateWidget();
+  loadCompletedTasksAccordion();
+  enableSubmitTaskOnEnter();
+}
+
+/* AJAX calls */
 
 function getSummary()
 {
@@ -113,6 +129,8 @@ function gotPendingTasks(data, textStatus, jqXHR)
 {
   loadPendingTasksTable(data);
   console.log("Loaded pending tasks table");
+  loadEditTaskDialogs(data);
+  console.log("Loaded edit task dialogs")
 }
 
 function addedTask(data, textStatus, jqXHR)
@@ -207,6 +225,7 @@ function loadPendingTasksTable(data)
   html += '    <th>Due</th>';
   html += '    <th></th>';
   html += '    <th></th>';
+  html += '    <th></th>';
   html += '  </tr>';
   html += '</thead>';
   html += '<tbody>';
@@ -215,8 +234,9 @@ function loadPendingTasksTable(data)
     html += '    <td>' + pendingTasks[i]['title'] + '</td>';
     html += '    <td>' + pendingTasks[i]['description'] + '</td>';
     html += '    <td>' + pendingTasks[i]['dueDate'] + '</td>';
-    html += '    <td><button onclick="completeTask(' + pendingTasks[i]['id'] + ')">Complete</button></td>';
-    html += '    <td><button onclick="deleteTask(' + pendingTasks[i]['id'] + ')">Cancel</button></td>';
+    html += '    <td><button class="button button-success" onclick="completeTask(' + pendingTasks[i]['id'] + ')">Complete</button></td>';
+    html += '    <td><button class="button button-info" id="button-edit-task-' + pendingTasks[i]['id'] + '">Edit</buttonclass></td>';
+    html += '    <td><button class="button button-warning" onclick="deleteTask(' + pendingTasks[i]['id'] + ')">Cancel</button></td>';
     html += '  </tr>';
   }
   html += '</tbody>';
@@ -241,18 +261,98 @@ function loadCompletedTasksTable(data)
     html += '    <td>' + completedTasks[i]['title'] + '</td>';
     html += '    <td>' + completedTasks[i]['description'] + '</td>';
     html += '    <td>' + completedTasks[i]['dueDate'] + '</td>';
-    html += '    <td><button onclick="deleteTask(' + completedTasks[i]['id'] + ')">Delete</button></td>';
+    html += '    <td><button class="button button-error" onclick="deleteTask(' + completedTasks[i]['id'] + ')">Delete</button></td>';
     html += '  </tr>';
   }
   html += '</tbody>';
   document.getElementById('table-completed').innerHTML = html;
 }
 
+function loadEditTaskDialogs(data)
+{
+  var pendingTasks = data;
+  var html = '';
+  for (var i = 0; i < pendingTasks.length; i++) {
+    html += '<div class="dialog-edit-task" id="dialog-edit-task-' + pendingTasks[i]['id'] + '" style="display:none">';
+    html += '  <form>';
+    html += '    <table>';
+    html += '      <tbody>';
+    html += '        <tr>';
+    html += '          <th><label for="input-title-' + pendingTasks[i]['id'] +'">Title</label></th>';
+    html += '          <td><input id="input-title-' + pendingTasks[i]['id'] + '" type="text" value="' + pendingTasks[i]['title'] + '" /></td>';
+    html += '        </tr>';
+    html += '        <tr>';
+    html += '          <th><label for="textarea-description-' + pendingTasks[i]['id'] +'">Description</label></th>';
+    html += '          <td><input id="textarea-description-' + pendingTasks[i]['id'] + '" type="text" value="' + pendingTasks[i]['description'] + '" /></td>';
+    html += '        </tr>';
+    html += '        <tr>';
+    html += '          <th><label for="input-dueDate-' + pendingTasks[i]['id'] +'">Due date</label></th>';
+    html += '          <td><input id="input-dueDate-' + pendingTasks[i]['id'] + '" type="text" value="' + pendingTasks[i]['dueDate'] + '" /></td>';
+    html += '        </tr>';
+    html += '      </tbody>';
+    html += '    </table>';
+    html += '  </form>';
+    html += '</div>';
+
+    // Due date widget
+    // $("#input-dueDate-" + pendingTasks[i]['id']).datepicker({
+    //   dateFormat: 'yy-mm-dd'
+    // });
+
+    // Edit dialog
+    // $("#dialog-edit-task-" + pendingTasks[i]['id']).dialog({
+    //   width: 640,
+    //   autoOpen: false,
+    //   modal: true,
+    //   buttons: [
+    //     {
+    //       text: "Close",
+    //       click: function() {
+    //         $(this).dialog("close");
+    //       }
+    //     }
+    //   ]
+    // });
+    // $("#button-edit-task-" + pendingTasks[i]['id']).click(function () {
+    //   $("#dialog-edit-task-" + pendingTasks[i]['id']).dialog("open");
+    // });
+  }
+  document.getElementById('container-dialogs').innerHTML = html;
+}
+
+/* Widget setup */
+
+function loadDueDateWidget()
+{
+  $("#input-dueDate").datepicker({
+    dateFormat: 'yy-mm-dd'
+  });
+}
+
+function loadCompletedTasksAccordion()
+{
+  $("#accordion-completed").accordion({
+    collapsible: true,
+    active: false,
+    heightStyle: 'content'
+  });
+}
+
+function enableSubmitTaskOnEnter()
+{
+  $("#table-addtask input, textarea").keyup(function (event)
+  {
+    if (event.keyCode == 13) {
+      $("#button-submit").click();
+    }
+  });
+}
+
 /* Helpers */
 
 function getFormattedTaskDisplay(title, description, dueDate)
 {
-  return title + " (" + description.substring(0, 10) + "...) [" + dueDate + "]";
+  return title + " (" + description.substring(0, 20) + "...) [" + dueDate + "]";
 }
 
 /* Constants */
