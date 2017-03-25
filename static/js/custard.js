@@ -273,25 +273,27 @@ function loadEditTaskDialogs(data)
   var pendingTasks = data;
   var html = '';
   for (var i = 0; i < pendingTasks.length; i++) {
-    html += '<div class="dialog-edit-task" id="dialog-edit-task-' + pendingTasks[i]['id'] + '" style="display:none">';
-    html += '  <form>';
-    html += '    <table>';
-    html += '      <tbody>';
-    html += '        <tr>';
-    html += '          <th><label for="input-title-' + pendingTasks[i]['id'] +'">Title</label></th>';
-    html += '          <td><input id="input-title-' + pendingTasks[i]['id'] + '" type="text" value="' + pendingTasks[i]['title'] + '" /></td>';
-    html += '        </tr>';
-    html += '        <tr>';
-    html += '          <th><label for="textarea-description-' + pendingTasks[i]['id'] +'">Description</label></th>';
-    html += '          <td><input id="textarea-description-' + pendingTasks[i]['id'] + '" type="text" value="' + pendingTasks[i]['description'] + '" /></td>';
-    html += '        </tr>';
-    html += '        <tr>';
-    html += '          <th><label for="input-dueDate-' + pendingTasks[i]['id'] +'">Due date</label></th>';
-    html += '          <td><input id="input-dueDate-' + pendingTasks[i]['id'] + '" type="text" value="' + pendingTasks[i]['dueDate'] + '" /></td>';
-    html += '        </tr>';
-    html += '      </tbody>';
-    html += '    </table>';
-    html += '  </form>';
+    html += '<div class="dialog-edit-task-background" id="dialog-edit-task-background-' + pendingTasks[i]['id'] + '">';
+    html += '  <div class="dialog-edit-task" id="dialog-edit-task-' + pendingTasks[i]['id'] + '">';
+    html += '    <form>';
+    html += '      <table>';
+    html += '        <tbody>';
+    html += '          <tr>';
+    html += '            <th><label for="input-title-' + pendingTasks[i]['id'] +'">Title</label></th>';
+    html += '            <td><input id="input-title-' + pendingTasks[i]['id'] + '" type="text" value="' + pendingTasks[i]['title'] + '" /></td>';
+    html += '          </tr>';
+    html += '          <tr>';
+    html += '            <th><label for="textarea-description-' + pendingTasks[i]['id'] +'">Description</label></th>';
+    html += '            <td><input id="textarea-description-' + pendingTasks[i]['id'] + '" type="text" value="' + pendingTasks[i]['description'] + '" /></td>';
+    html += '          </tr>';
+    html += '          <tr>';
+    html += '            <th><label for="input-dueDate-' + pendingTasks[i]['id'] +'">Due date</label></th>';
+    html += '            <td><input id="input-dueDate-' + pendingTasks[i]['id'] + '" type="text" value="' + pendingTasks[i]['dueDate'] + '" /></td>';
+    html += '          </tr>';
+    html += '        </tbody>';
+    html += '      </table>';
+    html += '    </form>';
+    html += '  </div>';
     html += '</div>';
 
     // Due date widget
@@ -318,6 +320,7 @@ function loadEditTaskDialogs(data)
     // });
   }
   document.getElementById('container-dialogs').innerHTML = html;
+  enableEditTaskDialogs(pendingTasks);
 }
 
 /* Widget setup */
@@ -346,6 +349,24 @@ function enableSubmitTaskOnEnter()
       $("#button-submit").click();
     }
   });
+}
+
+// TODO: Buttons all bind to the last task...
+function enableEditTaskDialogs(pendingTasks)
+{
+  for (var i = 0; i < pendingTasks.length; i++) {
+    var modal = document.getElementById('dialog-edit-task-background-' + pendingTasks[i]['id']);
+    document.getElementById('button-edit-task-' + pendingTasks[i]['id']).onclick = function ()
+    {
+      modal.style.display = "block";
+    };
+    window.onclick = function(event)
+    {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    };
+  }
 }
 
 /* Helpers */
