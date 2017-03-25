@@ -276,7 +276,7 @@ function loadEditTaskDialogs(data)
     html += '<div class="dialog-edit-task-background" id="dialog-edit-task-background-' + pendingTasks[i]['id'] + '">';
     html += '  <div class="dialog-edit-task" id="dialog-edit-task-' + pendingTasks[i]['id'] + '">';
     html += '    <form>';
-    html += '      <table>';
+    html += '      <table class="table table-form">';
     html += '        <tbody>';
     html += '          <tr>';
     html += '            <th><label for="input-title-' + pendingTasks[i]['id'] +'">Title</label></th>';
@@ -345,7 +345,7 @@ function enableSubmitTaskOnEnter()
 {
   $("#table-addtask input, textarea").keyup(function (event)
   {
-    if (event.keyCode == 13) {
+    if (event.keyCode === 13) {
       $("#button-submit").click();
     }
   });
@@ -355,17 +355,24 @@ function enableSubmitTaskOnEnter()
 function enableEditTaskDialogs(pendingTasks)
 {
   for (var i = 0; i < pendingTasks.length; i++) {
-    var modal = document.getElementById('dialog-edit-task-background-' + pendingTasks[i]['id']);
-    document.getElementById('button-edit-task-' + pendingTasks[i]['id']).onclick = function ()
+    var button = $('#button-edit-task-' + pendingTasks[i]['id']);
+    var modalBackground = $('#dialog-edit-task-background-' + pendingTasks[i]['id']);
+    var modal = $('#dialog-edit-task-' + pendingTasks[i]['id']);
+
+    button.click(function(event)
     {
-      modal.style.display = "block";
-    };
-    window.onclick = function(event)
+      modalBackground.show();
+      event.stopPropagation();
+    });
+
+    $(document).click(function(event)
     {
-      if (event.target == modal) {
-        modal.style.display = "none";
+      if (modalBackground.is(":visible") && $(event.target).closest(modal).length === 0)
+      {
+        modalBackground.hide();
       }
-    };
+    });
+
   }
 }
 
