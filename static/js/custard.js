@@ -129,8 +129,6 @@ function gotPendingTasks(data, textStatus, jqXHR)
 {
   loadPendingTasksTable(data);
   console.log("Loaded pending tasks table");
-  loadEditTaskDialogs(data);
-  console.log("Loaded edit task dialogs")
 }
 
 function addedTask(data, textStatus, jqXHR)
@@ -189,13 +187,13 @@ function loadMessageSpan(message, messageLevel)
       cls = "message message-error";
       break;
   }
-  $("#span-message").attr('class', cls).html(message);
+  $('#span-message').attr('class', cls).html(message);
 }
 
 function loadSummaryTable(data)
 {
   var html = '';
-  html +=  '<tbody>';
+  html += '<tbody>';
   html += '  <tr>';
   html += '    <th>Tasks pending</th>';
   html += '    <td id="summary-total">' + data['total'] + '</td>';
@@ -209,7 +207,7 @@ function loadSummaryTable(data)
   html += '    <td id="summary-due-today">' + data['dueToday'] + '</td>';
   html += '  </tr>';
   html += '</tbody>';
-  document.getElementById('table-summary').innerHTML = html;
+  $('#table-summary').html(html);
 }
 
 // TODO: Some refactoring to do here?
@@ -240,7 +238,36 @@ function loadPendingTasksTable(data)
     html += '  </tr>';
   }
   html += '</tbody>';
-  document.getElementById('table-pending').innerHTML = html;
+  $('#table-pending').html(html);
+
+  // Setup behaviour for the edit dialog
+  var dialogBackground = $('#dialog-edit-task-background');
+  var dialog = $('#dialog-edit-task');
+
+  // Clicking each edit button loads the corresponding task info and brings up the dialog
+  for (i = 0; i < pendingTasks.length; i++) {
+    $('#button-edit-task-' + pendingTasks[i]['id']).click(pendingTasks[i], function(event)
+    {
+      loadEditTaskDialog(event);
+      dialogBackground.show();
+      event.stopPropagation();
+    });
+
+    $('#input-edit-dueDate').datepicker({
+      dateFormat: 'yy-mm-dd'
+    });
+  }
+
+  // Clicking anywhere outside the dialog hides it
+  $(document).click(function(event)
+  {
+    if (dialogBackground.is(':visible') && $(event.target).closest(dialog).length === 0)
+    {
+      dialogBackground.hide();
+    }
+  });
+
+
 }
 
 function loadCompletedTasksTable(data)
@@ -265,76 +292,51 @@ function loadCompletedTasksTable(data)
     html += '  </tr>';
   }
   html += '</tbody>';
-  document.getElementById('table-completed').innerHTML = html;
+  $('#table-completed').html(html);
 }
 
-function loadEditTaskDialogs(data)
+function loadEditTaskDialog(event)
 {
-  var pendingTasks = data;
   var html = '';
-  for (var i = 0; i < pendingTasks.length; i++) {
-    html += '<div class="dialog-edit-task-background" id="dialog-edit-task-background-' + pendingTasks[i]['id'] + '">';
-    html += '  <div class="dialog-edit-task" id="dialog-edit-task-' + pendingTasks[i]['id'] + '">';
-    html += '    <form>';
-    html += '      <table class="table table-form">';
-    html += '        <tbody>';
-    html += '          <tr>';
-    html += '            <th><label for="input-title-' + pendingTasks[i]['id'] +'">Title</label></th>';
-    html += '            <td><input id="input-title-' + pendingTasks[i]['id'] + '" type="text" value="' + pendingTasks[i]['title'] + '" /></td>';
-    html += '          </tr>';
-    html += '          <tr>';
-    html += '            <th><label for="textarea-description-' + pendingTasks[i]['id'] +'">Description</label></th>';
-    html += '            <td><input id="textarea-description-' + pendingTasks[i]['id'] + '" type="text" value="' + pendingTasks[i]['description'] + '" /></td>';
-    html += '          </tr>';
-    html += '          <tr>';
-    html += '            <th><label for="input-dueDate-' + pendingTasks[i]['id'] +'">Due date</label></th>';
-    html += '            <td><input id="input-dueDate-' + pendingTasks[i]['id'] + '" type="text" value="' + pendingTasks[i]['dueDate'] + '" /></td>';
-    html += '          </tr>';
-    html += '        </tbody>';
-    html += '      </table>';
-    html += '    </form>';
-    html += '  </div>';
-    html += '</div>';
-
-    // Due date widget
-    // $("#input-dueDate-" + pendingTasks[i]['id']).datepicker({
-    //   dateFormat: 'yy-mm-dd'
-    // });
-
-    // Edit dialog
-    // $("#dialog-edit-task-" + pendingTasks[i]['id']).dialog({
-    //   width: 640,
-    //   autoOpen: false,
-    //   modal: true,
-    //   buttons: [
-    //     {
-    //       text: "Close",
-    //       click: function() {
-    //         $(this).dialog("close");
-    //       }
-    //     }
-    //   ]
-    // });
-    // $("#button-edit-task-" + pendingTasks[i]['id']).click(function () {
-    //   $("#dialog-edit-task-" + pendingTasks[i]['id']).dialog("open");
-    // });
-  }
-  document.getElementById('container-dialogs').innerHTML = html;
-  enableEditTaskDialogs(pendingTasks);
+  task = event.data;
+  title = task['title'];
+  description = task['description'];
+  dueDate = task['dueDate'];
+  html += '<form>';
+  html += '  <table class="table table-form">';
+  html += '    <tbody>';
+  html += '      <tr>';
+  html += '        <th><label for="input-edit-title">Title</label></th>';
+  html += '        <td><input id="input-edit-title" type="text" value="' + title + '" /></td>';
+  html += '      </tr>';
+  html += '      <tr>';
+  html += '        <th><label for="textarea-edit-description">Description</label></th>';
+  html += '        <td><input id="textarea-edit-description" type="text" value="' + description + '" /></td>';
+  html += '      </tr>';
+  html += '      <tr>';
+  html += '        <th><label for="input-edit-dueDate">Due date</label></th>';
+  html += '        <td><input id="input-edit-dueDate" type="text" value="' + dueDate + '" /></td>';
+  html += '      </tr>';
+  html += '    </tbody>';
+  html += '  </table>';
+  html += '</form>';
+  $('#dialog-edit-task').html(html);
+  console.log("Loaded edit dialog");
+  //enableEditTaskDialogs(pendingTasks);
 }
 
 /* Widget setup */
 
 function loadDueDateWidget()
 {
-  $("#input-dueDate").datepicker({
+  $('#input-dueDate').datepicker({
     dateFormat: 'yy-mm-dd'
   });
 }
 
 function loadCompletedTasksAccordion()
 {
-  $("#accordion-completed").accordion({
+  $('#accordion-completed').accordion({
     collapsible: true,
     active: false,
     heightStyle: 'content'
@@ -343,37 +345,17 @@ function loadCompletedTasksAccordion()
 
 function enableSubmitTaskOnEnter()
 {
-  $("#table-addtask input, textarea").keyup(function (event)
+  $('#table-addtask input, textarea').keyup(function (event)
   {
     if (event.keyCode === 13) {
-      $("#button-submit").click();
+      $('#button-submit').click();
     }
   });
 }
 
-// TODO: Buttons all bind to the last task...
-function enableEditTaskDialogs(pendingTasks)
+function enableEditTaskDialog()
 {
-  for (var i = 0; i < pendingTasks.length; i++) {
-    var button = $('#button-edit-task-' + pendingTasks[i]['id']);
-    var modalBackground = $('#dialog-edit-task-background-' + pendingTasks[i]['id']);
-    var modal = $('#dialog-edit-task-' + pendingTasks[i]['id']);
 
-    button.click(function(event)
-    {
-      modalBackground.show();
-      event.stopPropagation();
-    });
-
-    $(document).click(function(event)
-    {
-      if (modalBackground.is(":visible") && $(event.target).closest(modal).length === 0)
-      {
-        modalBackground.hide();
-      }
-    });
-
-  }
 }
 
 /* Helpers */
