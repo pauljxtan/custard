@@ -1,3 +1,9 @@
+/* Globals */
+
+var taskIdBeingEdited = -1;
+var dialogBackground = $('#dialog-edit-task-background');
+var dialog = $('#dialog-edit-task');
+
 /* Main functions */
 
 function reloadEverything()
@@ -18,6 +24,12 @@ function reloadAllWidgets()
   loadDueDateWidget();
   loadCompletedTasksAccordion();
   enableSubmitTaskOnEnter();
+}
+
+function setClickHandlers()
+{
+  $('#button-add-task').click(addTask);
+  $('#button-edit-task').click(editTask);
 }
 
 /* AJAX calls */
@@ -48,6 +60,22 @@ function addTask()
       'dueDate': encodeURIComponent($('#input-dueDate').val())
     },
     addedTask,
+    requestFailed
+  );
+}
+
+function editTask()
+{
+  doTaskRequest
+  (
+    {
+      'action': 'editTask',
+      'id': taskIdBeingEdited,
+      'title': encodeURIComponent($('#input-edit-title').val()),
+      'description': encodeURIComponent($('#textarea-edit-description').val()),
+      'dueDate': encodeURIComponent($('#input-edit-dueDate').val())
+    },
+    editedTask,
     requestFailed
   );
 }
@@ -137,6 +165,18 @@ function addedTask(data, textStatus, jqXHR)
   console.log(message);
   loadMessageSpan(message, MessageLevel.SUCCESS);
   reloadAllTables();
+}
+
+function editedTask(data, textStatus, jqXHR)
+{
+  console.log("editedTask");
+  if (data['result'] !== "nochange") {
+    message = "<b>Edited task:</b> " + getFormattedTaskDisplay(data['editedTitle'], data['editedDescription'], data['editedDueDate']);
+    console.log(message);
+    loadMessageSpan(message, MessageLevel.SUCCESS);
+  }
+  reloadAllTables();
+  dialogBackground.hide();
 }
 
 function clearedAllTasks(data, textStatus, jqXHR)
@@ -240,11 +280,11 @@ function loadPendingTasksTable(data)
   html += '</tbody>';
   $('#table-pending').html(html);
 
-  // Setup behaviour for the edit dialog
-  var dialogBackground = $('#dialog-edit-task-background');
-  var dialog = $('#dialog-edit-task');
+  $('#input-edit-dueDate').datepicker({
+    dateFormat: 'yy-mm-dd'
+  });
 
-  // Clicking each edit button loads the corresponding task info and brings up the dialog
+  // Clicking each edit button loads the corresponding task info and shows the dialog
   for (i = 0; i < pendingTasks.length; i++) {
     $('#button-edit-task-' + pendingTasks[i]['id']).click(pendingTasks[i], function(event)
     {
@@ -252,22 +292,15 @@ function loadPendingTasksTable(data)
       dialogBackground.show();
       event.stopPropagation();
     });
-
-    $('#input-edit-dueDate').datepicker({
-      dateFormat: 'yy-mm-dd'
-    });
   }
 
   // Clicking anywhere outside the dialog hides it
-  $(document).click(function(event)
+  $(document).click(function (event)
   {
-    if (dialogBackground.is(':visible') && $(event.target).closest(dialog).length === 0)
-    {
+    if (dialogBackground.is(':visible') && $(event.target).closest(dialog).length === 0) {
       dialogBackground.hide();
     }
   });
-
-
 }
 
 function loadCompletedTasksTable(data)
@@ -302,27 +335,25 @@ function loadEditTaskDialog(event)
   title = task['title'];
   description = task['description'];
   dueDate = task['dueDate'];
-  html += '<form>';
-  html += '  <table class="table table-form">';
-  html += '    <tbody>';
-  html += '      <tr>';
-  html += '        <th><label for="input-edit-title">Title</label></th>';
-  html += '        <td><input id="input-edit-title" type="text" value="' + title + '" /></td>';
-  html += '      </tr>';
-  html += '      <tr>';
-  html += '        <th><label for="textarea-edit-description">Description</label></th>';
-  html += '        <td><input id="textarea-edit-description" type="text" value="' + description + '" /></td>';
-  html += '      </tr>';
-  html += '      <tr>';
-  html += '        <th><label for="input-edit-dueDate">Due date</label></th>';
-  html += '        <td><input id="input-edit-dueDate" type="text" value="' + dueDate + '" /></td>';
-  html += '      </tr>';
-  html += '    </tbody>';
-  html += '  </table>';
-  html += '</form>';
-  $('#dialog-edit-task').html(html);
+  html += '<table class="table table-form">';
+  html += '  <tbody>';
+  html += '    <tr>';
+  html += '      <th><label for="input-edit-title">Title</label></th>';
+  html += '      <td><input id="input-edit-title" type="text" value="' + title + '" /></td>';
+  html += '    </tr>';
+  html += '    <tr>';
+  html += '      <th><label for="textarea-edit-description">Description</label></th>';
+  html += '      <td><input id="textarea-edit-description" type="text" value="' + description + '" /></td>';
+  html += '    </tr>';
+  html += '    <tr>';
+  html += '      <th><label for="input-edit-dueDate">Due date</label></th>';
+  html += '      <td><input id="input-edit-dueDate" type="text" value="' + dueDate + '" /></td>';
+  html += '    </tr>';
+  html += '  </tbody>';
+  html += '</table>';
+  $('#dialog-edit-task-form').html(html);
+  taskIdBeingEdited = task['id'];
   console.log("Loaded edit dialog");
-  //enableEditTaskDialogs(pendingTasks);
 }
 
 /* Widget setup */
@@ -351,11 +382,6 @@ function enableSubmitTaskOnEnter()
       $('#button-submit').click();
     }
   });
-}
-
-function enableEditTaskDialog()
-{
-
 }
 
 /* Helpers */

@@ -24,6 +24,10 @@ switch ($action)
     // TODO: Validate parameters
     addTask($db, urldecode($_POST['title']), urldecode($_POST['description']), urldecode($_POST['dueDate']));
     break;
+  case 'editTask':
+    // TODO: Validate parameters
+    editTask($db, urldecode($_POST['id']), urldecode($_POST['title']), urldecode($_POST['description']), urldecode($_POST['dueDate']));
+    break;
   case 'clearAllTasks':
     clearAllTasks($db);
     break;
@@ -69,6 +73,13 @@ function getTasksOverdue($db)
 function getTasksDueToday($db)
 {
   return $db->query("SELECT * FROM tasks WHERE completed = false AND dueDate = DATE(NOW());");
+}
+
+function updateTask($db, $id, $title, $description, $dueDate)
+{
+  $sql = "UPDATE tasks SET title = ?, description = ?, dueDate = ? WHERE id = ".$id.";";
+  $statement = $db->getPreparedStatement($sql);
+  $statement->execute(array($title, $description, $dueDate));
 }
 
 function getCompletedTasks($db)
@@ -120,10 +131,28 @@ function addTask($db, $title, $description, $dueDate, $returnAddedTask = true, $
   }
 }
 
+function editTask($db, $id, $title, $description, $dueDate, $returnEditedTask = true)
+{
+  if ($id == -1)
+  {
+    echo json_encode(array('result' => "nochange"));
+    return;
+  }
+  updateTask($db, $id, $title, $description, $dueDate);
+  if ($returnEditedTask)
+  {
+    echo json_encode(array(
+      'result' => "success",
+      'editedTitle' => $title,
+      'editedDescription' => $description,
+      'editedDueDate' => $dueDate
+    ));
+  }
+}
+
 function clearAllTasks($db)
 {
   $rowsDeleted = $db->deleteAllRows('tasks');
-  // TODO: Return something more meaningful...
   echo json_encode(array(
     'result' => "success",
     'rowsDeleted' => $rowsDeleted

@@ -26,6 +26,10 @@ class MySQL
     return $rows;
   }
 
+  public function getPreparedStatement($sql) {
+    return $this->dbHandle->prepare($sql);
+  }
+
   public function deleteAllRows($tableName) {
     $this->exec("TRUNCATE $tableName;");
   }

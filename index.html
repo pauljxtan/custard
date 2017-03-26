@@ -46,10 +46,11 @@
   </div>
 
   <div class="container">
-    <span><button id="button-submit" class="button button-submit button-success" onclick="addTask()">Add task</button></span>
+    <span><button id="button-add-task" class="button button-submit button-success">Add task</button></span>
   </div>
 
   <div class="container">
+    <!-- TODO: set these click handlers in the main JS -->
     <span><button class="button button-clear-all button-error" onclick="clearAllTasks()">Clear all tasks</button></span>
     <span><button class="button button-add-sample-tasks button-info" onclick="addSampleTasks()">Add sample tasks</button></span>
   </div>
@@ -73,7 +74,10 @@
 
   <div class="container">
     <div id="dialog-edit-task-background">
-      <div id="dialog-edit-task"></div>
+      <div id="dialog-edit-task">
+        <form id="dialog-edit-task-form"></form>
+        <span><button id="button-edit-task" class="button button-submit button-success">Save changes</button></span>
+      </div>
     </div>
   </div>
 
@@ -86,6 +90,7 @@
 <script>
   $(document).ready(function() {
     reloadEverything();
+    setClickHandlers();
 
     // Testing stuff
 //    $("#input-dueDate-2").datepicker({
