@@ -82,7 +82,7 @@ function editTask()
 
 function clearAllTasks()
 {
-  doTaskRequest({'action': 'clearAllTasks'}, clearedAllTasks, requestFailed)
+  doTaskRequest({'action': 'clearAllTasks'}, clearedAllTasks, requestFailed);
 }
 
 function addSampleTasks()
@@ -215,39 +215,37 @@ function deletedTask(data, textStatus, jqXHR)
 
 function loadMessageSpan(message, messageLevel)
 {
-  var cls = "message message-info";
+  var cls = "message info";
   switch (messageLevel) {
     case MessageLevel.SUCCESS:
-      cls = "message message-success";
+      cls = "message success";
       break;
     case MessageLevel.WARNING:
-      cls = "message message-warning";
+      cls = "message warning";
       break;
     case MessageLevel.ERROR:
-      cls = "message message-error";
+      cls = "message error";
       break;
   }
-  $('#span-message').attr('class', cls).html(message);
+  $('#span-message').toggle('slide', function() {
+    $('#span-message').attr('class', cls).html(message).toggle('slide');
+  });
 }
 
 function loadSummaryTable(data)
 {
-  var html = '';
-  html += '<tbody>';
-  html += '  <tr>';
-  html += '    <th>Tasks pending</th>';
-  html += '    <td id="summary-total">' + data['total'] + '</td>';
-  html += '  </tr>';
-  html += '  <tr>';
-  html += '    <th>Overdue</th>';
-  html += '    <td id="summary-overdue">' + data['overdue'] + '</td>';
-  html += '  </tr>';
-  html += '  <tr>';
-  html += '    <th>Due today</th>';
-  html += '    <td id="summary-due-today">' + data['dueToday'] + '</td>';
-  html += '  </tr>';
-  html += '</tbody>';
-  $('#table-summary').html(html);
+  $('#td-summary-total').fadeOut('fast', function ()
+  {
+    $('#td-summary-total').html(data['total']).fadeIn('fast');
+  });
+  $('#td-summary-overdue').fadeOut('fast', function ()
+  {
+    $('#td-summary-overdue').html(data['overdue']).fadeIn('fast');
+  });
+  $('#td-summary-duetoday').fadeOut('fast', function ()
+  {
+    $('#td-summary-duetoday').html(data['dueToday']).fadeIn('fast');
+  });
 }
 
 // TODO: Some refactoring to do here?
@@ -256,76 +254,60 @@ function loadPendingTasksTable(data)
 {
   var pendingTasks = data;
   var html = '';
-  html += '<thead>';
-  html += '  <tr>';
-  html += '    <th>Title</th>';
-  html += '    <th>Description</th>';
-  html += '    <th>Due</th>';
-  html += '    <th></th>';
-  html += '    <th></th>';
-  html += '    <th></th>';
-  html += '  </tr>';
-  html += '</thead>';
-  html += '<tbody>';
   for (var i = 0; i < pendingTasks.length; i++) {
-    html += '  <tr>';
-    html += '    <td>' + pendingTasks[i]['title'] + '</td>';
-    html += '    <td>' + pendingTasks[i]['description'] + '</td>';
-    html += '    <td>' + pendingTasks[i]['dueDate'] + '</td>';
-    html += '    <td><button class="button button-success" onclick="completeTask(' + pendingTasks[i]['id'] + ')">Complete</button></td>';
-    html += '    <td><button class="button button-info" id="button-edit-task-' + pendingTasks[i]['id'] + '">Edit</buttonclass></td>';
-    html += '    <td><button class="button button-warning" onclick="deleteTask(' + pendingTasks[i]['id'] + ')">Cancel</button></td>';
-    html += '  </tr>';
+    html += '<tr>';
+    html += '  <td>' + pendingTasks[i]['title'] + '</td>';
+    html += '  <td>' + pendingTasks[i]['description'] + '</td>';
+    html += '  <td>' + pendingTasks[i]['dueDate'] + '</td>';
+    html += '  <td><button class="button success" onclick="completeTask(' + pendingTasks[i]['id'] + ')">Complete</button></td>';
+    html += '  <td><button class="button info" id="button-edit-task-' + pendingTasks[i]['id'] + '">Edit</buttonclass></td>';
+    html += '  <td><button class="button warning" onclick="deleteTask(' + pendingTasks[i]['id'] + ')">Cancel</button></td>';
+    html += '</tr>';
   }
-  html += '</tbody>';
-  $('#table-pending').html(html);
+
+  $('#table-pending-tbody').fadeOut('fast', function() {
+    $('#table-pending-tbody').html(html).fadeIn('fast');
+
+    // Clicking each edit button loads the corresponding task info and shows the dialog
+    for (i = 0; i < pendingTasks.length; i++) {
+      $('#button-edit-task-' + pendingTasks[i]['id']).click(pendingTasks[i], function(event)
+      {
+        loadEditTaskDialog(event);
+        dialogBackground.slideDown();
+        event.stopPropagation();
+      });
+    }
+
+    // Clicking anywhere outside the dialog hides it
+    $(document).click(function (event)
+    {
+      if (dialogBackground.is(':visible') && $(event.target).closest(dialog).length === 0) {
+        dialogBackground.slideUp();
+      }
+    });
+  });
 
   $('#input-edit-dueDate').datepicker({
     dateFormat: 'yy-mm-dd'
   });
 
-  // Clicking each edit button loads the corresponding task info and shows the dialog
-  for (i = 0; i < pendingTasks.length; i++) {
-    $('#button-edit-task-' + pendingTasks[i]['id']).click(pendingTasks[i], function(event)
-    {
-      loadEditTaskDialog(event);
-      dialogBackground.show();
-      event.stopPropagation();
-    });
-  }
-
-  // Clicking anywhere outside the dialog hides it
-  $(document).click(function (event)
-  {
-    if (dialogBackground.is(':visible') && $(event.target).closest(dialog).length === 0) {
-      dialogBackground.hide();
-    }
-  });
 }
 
 function loadCompletedTasksTable(data)
 {
   var completedTasks = data;
   var html = '';
-  html += '<thead>';
-  html += '  <tr>';
-  html += '    <th>Title</th>';
-  html += '    <th>Description</th>';
-  html += '    <th>Due</th>';
-  html += '    <th></th>';
-  html += '  </tr>';
-  html += '</thead>';
-  html += '<tbody>';
   for (var i = 0; i < completedTasks.length; i++) {
-    html += '  <tr>';
-    html += '    <td>' + completedTasks[i]['title'] + '</td>';
-    html += '    <td>' + completedTasks[i]['description'] + '</td>';
-    html += '    <td>' + completedTasks[i]['dueDate'] + '</td>';
-    html += '    <td><button class="button button-error" onclick="deleteTask(' + completedTasks[i]['id'] + ')">Delete</button></td>';
-    html += '  </tr>';
+    html += '<tr>';
+    html += '  <td>' + completedTasks[i]['title'] + '</td>';
+    html += '  <td>' + completedTasks[i]['description'] + '</td>';
+    html += '  <td>' + completedTasks[i]['dueDate'] + '</td>';
+    html += '  <td><button class="button error" onclick="deleteTask(' + completedTasks[i]['id'] + ')">Delete</button></td>';
+    html += '</tr>';
   }
-  html += '</tbody>';
-  $('#table-completed').html(html);
+  $('#table-completed-tbody').fadeOut('fast', function() {
+    $('#table-completed-tbody').html(html).fadeIn('fast');
+  });
 }
 
 function loadEditTaskDialog(event)

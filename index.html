@@ -20,7 +20,22 @@
   </div>
 
   <div class="container">
-    <table id="table-summary" class="table table-summary"></table>
+    <table id="table-summary" class="table table-summary">
+      <tbody>
+      <tr>
+        <th>Tasks pending</th>
+        <td id="td-summary-total">0</td>
+      </tr>
+      <tr>
+        <th>Overdue</th>
+        <td id="td-summary-overdue">0</td>
+      </tr>
+      <tr>
+        <th>Due today</th>
+        <td id="td-summary-duetoday">0</td>
+      </tr>
+      </tbody>
+    </table>
   </div>
 
   <div class="container">
@@ -46,13 +61,13 @@
   </div>
 
   <div class="container">
-    <span><button id="button-add-task" class="button button-submit button-success">Add task</button></span>
+    <span><button id="button-add-task" class="button button-full-width success">Add task</button></span>
   </div>
 
   <div class="container">
     <!-- TODO: set these click handlers in the main JS -->
-    <span><button class="button button-clear-all button-error" onclick="clearAllTasks()">Clear all tasks</button></span>
-    <span><button class="button button-add-sample-tasks button-info" onclick="addSampleTasks()">Add sample tasks</button></span>
+    <span><button class="button button-half-width error" onclick="clearAllTasks()">Clear all tasks</button></span>
+    <span><button class="button button-half-width info" onclick="addSampleTasks()">Add sample tasks</button></span>
   </div>
 
   <div class="container">
@@ -60,14 +75,36 @@
   </div>
 
   <div class="container">
-    <table id="table-pending" class="table table-pending"></table>
+    <table id="table-pending" class="table table-pending">
+      <thead>
+      <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Due</th>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody id="table-pending-tbody"></tbody>
+    </table>
   </div>
 
   <div class="container">
     <div id="accordion-completed">
       <h3 id="accordion-completed-header">Show completed tasks</h3>
       <div>
-        <table id="table-completed" class="table table-completed"></table>
+        <table id="table-completed" class="table table-completed">
+          <thead>
+          <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Due</th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody id="table-completed-tbody"></tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -76,7 +113,7 @@
     <div id="dialog-edit-task-background">
       <div id="dialog-edit-task">
         <form id="dialog-edit-task-form"></form>
-        <span><button id="button-edit-task" class="button button-submit button-success">Save changes</button></span>
+        <span><button id="button-edit-task" class="button button-full-width success">Save changes</button></span>
       </div>
     </div>
   </div>

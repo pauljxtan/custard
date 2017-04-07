@@ -78,39 +78,30 @@ button {
 .table.table-completed td {
   color: #E56399;
 }
-.button.button-submit {
+.button-full-width {
   width: 100%;
+}
+.button-half-width {
+  width: 49%;
 }
 .message {
   padding: 5px;
   color: #ffffff;
 }
-.message.message-success {
+.success {
   background: #449d44;
 }
-.message.message-info {
+.info {
   background: #0275d8;
 }
-.message.message-warning {
+.warning {
   background: #ec971f;
 }
-.message.message-error {
+.error {
   background: #c9302c;
 }
 .button {
   color: #ffffff;
-}
-.button.button-success {
-  background: #449d44;
-}
-.button.button-info {
-  background: #0275d8;
-}
-.button.button-warning {
-  background: #ec971f;
-}
-.button.button-error {
-  background: #c9302c;
 }
 #dialog-edit-task-background {
   display: none; /* Hidden by default */
