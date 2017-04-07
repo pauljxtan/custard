@@ -234,17 +234,17 @@ function loadMessageSpan(message, messageLevel)
 
 function loadSummaryTable(data)
 {
-  $('#td-summary-total').fadeOut('fast', function ()
+  $('#td-summary-total').fadeOut(function ()
   {
-    $('#td-summary-total').html(data['total']).fadeIn('fast');
+    $('#td-summary-total').html(data['total']).fadeIn();
   });
-  $('#td-summary-overdue').fadeOut('fast', function ()
+  $('#td-summary-overdue').fadeOut(function ()
   {
-    $('#td-summary-overdue').html(data['overdue']).fadeIn('fast');
+    $('#td-summary-overdue').html(data['overdue']).fadeIn();
   });
-  $('#td-summary-duetoday').fadeOut('fast', function ()
+  $('#td-summary-duetoday').fadeOut(function ()
   {
-    $('#td-summary-duetoday').html(data['dueToday']).fadeIn('fast');
+    $('#td-summary-duetoday').html(data['dueToday']).fadeIn();
   });
 }
 
@@ -265,8 +265,8 @@ function loadPendingTasksTable(data)
     html += '</tr>';
   }
 
-  $('#table-pending-tbody').fadeOut('fast', function() {
-    $('#table-pending-tbody').html(html).fadeIn('fast');
+  $('#table-pending-tbody').fadeOut(function() {
+    $('#table-pending-tbody').html(html).fadeIn();
 
     // Clicking each edit button loads the corresponding task info and shows the dialog
     for (i = 0; i < pendingTasks.length; i++) {
@@ -305,8 +305,8 @@ function loadCompletedTasksTable(data)
     html += '  <td><button class="button error" onclick="deleteTask(' + completedTasks[i]['id'] + ')">Delete</button></td>';
     html += '</tr>';
   }
-  $('#table-completed-tbody').fadeOut('fast', function() {
-    $('#table-completed-tbody').html(html).fadeIn('fast');
+  $('#table-completed-tbody').fadeOut(function() {
+    $('#table-completed-tbody').html(html).fadeIn();
   });
 }
 
